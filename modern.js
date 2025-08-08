@@ -9,12 +9,13 @@ function initAnimations() {
     // Ensure gallery items are visible by default
     gsap.set('.gallery-item', {opacity: 1});
     
-    // Hero section animations
+    // Hero section animations - delay start until after preloader
     gsap.from('.hero-content', {
         opacity: 0,
         y: 50,
         duration: 1.2,
-        ease: 'power3.out'
+        ease: 'power3.out',
+        delay: 0.3 // Small delay after preloader disappears
     });
     
     // Gallery items stagger animation
