@@ -1,8 +1,17 @@
 // Initialize Lenis for smooth scrolling
 let lenis;
 
+// Track if animations have been initialized
+let animationsInitialized = false;
+
 // Initialize GSAP animations
 function initAnimations() {
+    // Prevent multiple initializations
+    if (animationsInitialized) return;
+    animationsInitialized = true;
+    
+    console.log('Initializing animations');
+    
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
     
@@ -15,7 +24,7 @@ function initAnimations() {
         y: 50,
         duration: 1.2,
         ease: 'power3.out',
-        delay: 0.3 // Small delay after preloader disappears
+        delay: 0.2 // Small delay after preloader disappears
     });
     
     // Gallery items stagger animation
@@ -25,11 +34,11 @@ function initAnimations() {
             start: 'top 80%',
             toggleActions: 'play none none none'
         },
-        opacity: 0.3,
-        y: 30,
-        stagger: 0.1,
-        duration: 0.8,
-        ease: 'power2.out'
+        opacity: 0.5,
+        y: 20,
+        stagger: 0.05,
+        duration: 0.5,
+        ease: 'power1.out'
     });
     
     // About section animation
@@ -94,10 +103,38 @@ function initAnimations() {
     });
 }
 
+// Add the missing initButtonEffects function before initSmoothScrolling
+
+// Initialize button hover effects
+function initButtonEffects() {
+    // Select all buttons with hover effects
+    const buttons = document.querySelectorAll('.btn, .button, [class*="btn-"]');
+    
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            gsap.to(this, {
+                scale: 1.05,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            gsap.to(this, {
+                scale: 1,
+                duration: 0.3,
+                ease: 'power2.in'
+            });
+        });
+    });
+    
+    console.log('Button hover effects initialized');
+}
+
 // Initialize Lenis smooth scrolling
 function initSmoothScrolling() {
     lenis = new Lenis({
-        duration: 1.2,
+        duration: 1,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         gestureOrientation: 'vertical',
@@ -121,10 +158,42 @@ function initSmoothScrolling() {
 }
 
 // Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize smooth scrolling with Lenis
-    initSmoothScrolling();
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for preloader to be removed before initializing animations
+    const initializeAfterPreloader = () => {
+        // Prevent multiple initializations
+        if (animationsInitialized) {
+            console.log('Animations already initialized, skipping');
+            return;
+        }
+        
+        console.log('Initializing Lenis and animations after preloader');
+        
+        // Initialize smooth scrolling with Lenis
+        initSmoothScrolling();
+        
+        // Initialize GSAP animations
+        initAnimations();
+        
+        // Initialize button hover effects
+        initButtonEffects();
+    };
     
-    // Initialize GSAP animations
-    initAnimations();
+    // Check if preloader is already gone
+    const preloader = document.getElementById('preloader');
+    if (!preloader || preloader.style.display === 'none') {
+        // Preloader already removed, initialize immediately
+        initializeAfterPreloader();
+    } else {
+        // Listen for the preloaderRemoved event
+        document.addEventListener('preloaderRemoved', initializeAfterPreloader, { once: true });
+        
+        // Fallback - initialize after 8.5 seconds even if preloader event doesn't fire
+        setTimeout(() => {
+            if (!animationsInitialized) {
+                console.log('Fallback initialization of animations');
+                initializeAfterPreloader();
+            }
+        }, 8500);
+    }
 });

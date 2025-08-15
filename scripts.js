@@ -1,4 +1,109 @@
 // Enhanced Preloader functionality
+// Initialize preloader state tracking
+let preloaderRemoved = false;
+let assetsLoaded = false;
+
+// Ensure only one preloader initialization happens
+let preloaderInitialized = false;
+
+// Theme initialization is now handled in theme.js
+
+// Immediately initialize preloader to prevent content flash
+(function() {
+    const preloader = document.getElementById('preloader');
+    if (preloader && !preloaderInitialized) {
+        preloaderInitialized = true;
+        
+        // Force the preloader to inherit the current theme before displaying
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        if (isDarkMode) {
+            preloader.classList.add('dark-mode-preloader');
+        }
+        
+        // Set display properties immediately
+        preloader.style.display = 'flex';
+        preloader.style.opacity = '1';
+        preloader.style.visibility = 'visible';
+        document.body.classList.add('loading');
+        
+        console.log('Preloader initialized immediately with theme:', isDarkMode ? 'dark' : 'light');
+    }
+})();
+
+// Function to hide preloader with animation - moved to global scope
+function hidePreloader() {
+    console.log('hidePreloader called');
+    
+    // Prevent multiple calls to hidePreloader
+    if (preloaderRemoved) {
+        console.log('Preloader already removed, ignoring call');
+        return;
+    }
+    
+    // Set flag to prevent multiple calls
+    preloaderRemoved = true;
+    
+    const preloader = document.getElementById('preloader');
+    
+    // Immediately remove loading classes to ensure content is visible
+    document.body.classList.remove('loading');
+    document.documentElement.classList.remove('js-loading');
+    
+    // Force all content to be visible immediately with proper z-index
+    document.querySelectorAll('body > *:not(#preloader)').forEach(el => {
+        el.style.opacity = '1';
+        el.style.position = 'relative';
+        el.style.zIndex = '1';
+    });
+    
+    // Fix layout immediately
+    if (!window.layoutFixed) {
+        fixGalleryLayout();
+        window.layoutFixed = true;
+    }
+    
+    if (!preloader) {
+        console.log('Preloader element not found, may have been removed already');
+        // Signal that the preloader has been fully removed
+        document.dispatchEvent(new Event('preloaderRemoved'));
+        return;
+    }
+    
+    console.log('Starting preloader removal animation sequence');
+    
+    const loader = document.querySelector('.loader');
+    const loadingText = document.querySelector('.loading-text');
+    if (loadingText) loadingText.textContent = 'Ready to explore!';
+    
+    // Add completion class for final animation
+    preloader.classList.add('preloader-complete');
+    if (loader) loader.classList.add('loader-complete');
+    
+    // Immediately start removing the preloader
+    preloader.classList.add('fade-out');
+    preloader.style.opacity = '0';
+    preloader.style.visibility = 'hidden';
+    preloader.style.zIndex = '-1';
+    
+    // Completely remove from DOM to ensure it doesn't interfere with content
+    setTimeout(() => {
+        if (preloader && preloader.parentNode) {
+            preloader.parentNode.removeChild(preloader);
+            console.log('Preloader completely removed from DOM');
+        }
+        
+        // Signal that the preloader has been fully removed
+        document.dispatchEvent(new Event('preloaderRemoved'));
+        console.log('Preloader fully removed and content revealed');
+        
+        // Initialize any deferred functionality that depends on preloader removal
+        if (typeof initAnimations === 'function' && !animationsInitialized) {
+            console.log('Initializing animations after preloader removal');
+            initAnimations();
+        }
+    }, 100);
+}
+
 window.addEventListener('DOMContentLoaded', function() {
     // Get all images on the page
     const images = document.querySelectorAll('img');
@@ -8,39 +113,76 @@ window.addEventListener('DOMContentLoaded', function() {
     const preloader = document.getElementById('preloader');
     const loader = document.querySelector('.loader');
     
-    // Add animation class to preloader
-    setTimeout(() => {
-        if (preloader) preloader.classList.add('preloader-active');
+    // Add animation class to preloader if it exists
+    if (preloader) {
+        // Add animation class to preloader immediately
+        preloader.classList.add('preloader-active');
+        // Add a subtle entrance animation
+        preloader.style.animation = 'preloader-entrance 0.8s ease-out';
         
-        // Create floating particles
-        createFloatingParticles();
-    }, 300);
+        console.log('Preloader animations initialized');
+    }
     
-    // Function to create floating particles
+    // Create floating particles with enhanced visuals
+    createFloatingParticles();
+    
+    // Add 3D perspective effect to loader
+    if (loader) {
+        loader.style.transform = 'perspective(1000px) rotateX(10deg)';
+        setTimeout(() => {
+            loader.style.transform = 'perspective(1000px) rotateX(0deg)';
+            loader.style.transition = 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        }, 500);
+    }
+    
+    // Function to create floating particles with enhanced visuals
     function createFloatingParticles() {
         if (!preloader) return;
         
-        // Create 12 particles with random positions
-        for (let i = 0; i < 12; i++) {
+        // Create more particles with varied shapes and animations
+        for (let i = 0; i < 20; i++) {
             const particle = document.createElement('div');
             particle.className = 'preloader-particle';
             
-            // Random size
-            const size = Math.random() * 8 + 4;
+            // Random size with more variation
+            const size = Math.random() * 12 + 3;
             particle.style.width = `${size}px`;
             particle.style.height = `${size}px`;
             
-            // Random position
+            // Random position across the entire screen
             const posX = Math.random() * 100;
             const posY = Math.random() * 100;
             particle.style.left = `${posX}%`;
             particle.style.top = `${posY}%`;
             
+            // Random opacity and blur for depth effect
+            const opacity = Math.random() * 0.5 + 0.1;
+            particle.style.opacity = opacity;
+            
+            // Random blur for depth perception
+            const blur = Math.random() * 2;
+            particle.style.filter = `blur(${blur}px)`;
+            
+            // Random border-radius for varied shapes (circle to rounded square)
+            const borderRadius = Math.random() * 50 + 50;
+            particle.style.borderRadius = `${borderRadius}%`;
+            
             // Random animation delay and duration
             const delay = Math.random() * 5;
-            const duration = Math.random() * 10 + 5;
+            const duration = Math.random() * 15 + 5;
             particle.style.animationDelay = `${delay}s`;
             particle.style.animationDuration = `${duration}s`;
+            
+            // Random animation direction
+            const directions = ['normal', 'reverse', 'alternate', 'alternate-reverse'];
+            const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+            particle.style.animationDirection = randomDirection;
+            
+            // Random background color based on theme colors
+            const hue = Math.random() * 60 - 30; // +/- 30 degrees from base color
+            particle.style.background = `linear-gradient(135deg, 
+                hsl(${240 + hue}, 70%, 60%), 
+                hsl(${280 + hue}, 70%, 60%))`;
             
             preloader.appendChild(particle);
         }
@@ -48,40 +190,30 @@ window.addEventListener('DOMContentLoaded', function() {
     
     // If there are no images, hide preloader after minimum display time
     if (totalImages === 0) {
-        setTimeout(hidePreloader, 1500);
+        setTimeout(() => {
+            assetsLoaded = true;
+            if (!preloaderRemoved) {
+                hidePreloader();
+            }
+        }, 1500);
         return;
     }
     
-    // Function to hide preloader with animation
-    function hidePreloader() {
-        if (loadingText) loadingText.textContent = 'Ready to explore!';
-        
-        // Add completion class for final animation
-        if (preloader) preloader.classList.add('preloader-complete');
-        if (loader) loader.classList.add('loader-complete');
-        
-        // Start fade out after showing completion state
-        setTimeout(function() {
-            if (preloader) preloader.classList.add('fade-out');
-            document.body.classList.remove('loading');
-            
-            // Remove preloader from DOM after animation completes
-            setTimeout(function() {
-                if (preloader) preloader.style.display = 'none';
-            }, 800);
-        }, 1000);
-    }
-    
     // Load event for each image
-    images.forEach(img => {
-        // Check if image is already cached
-        if (img.complete) {
-            setTimeout(imageLoaded, 100); // Small delay for smoother progress animation
-        } else {
-            img.addEventListener('load', imageLoaded);
-            img.addEventListener('error', imageLoaded); // Also count errors as loaded
-        }
-    });
+    // Process all images
+    {
+
+        // Process all images
+        images.forEach(img => {
+            // Check if image is already cached
+            if (img.complete) {
+                setTimeout(imageLoaded, 100); // Small delay for smoother progress animation
+            } else {
+                img.addEventListener('load', imageLoaded);
+                img.addEventListener('error', imageLoaded); // Also count errors as loaded
+            }
+        });
+    }
     
     // Function to track when each image loads
     function imageLoaded() {
@@ -93,48 +225,231 @@ window.addEventListener('DOMContentLoaded', function() {
             const loadingMessages = [
                 'Loading amazing photos',
                 'Preparing your visual journey',
+                'Processing your collection',
+                'Optimizing display quality',
                 'Almost there',
+                'Arranging your gallery',
                 'Finalizing your experience'
             ];
             
-            // Select message based on progress
+            // Select message based on progress with more granularity
             let messageIndex = 0;
-            if (percent > 25) messageIndex = 1;
-            if (percent > 50) messageIndex = 2;
-            if (percent > 75) messageIndex = 3;
+            if (percent > 15) messageIndex = 1;
+            if (percent > 30) messageIndex = 2;
+            if (percent > 45) messageIndex = 3;
+            if (percent > 60) messageIndex = 4;
+            if (percent > 75) messageIndex = 5;
+            if (percent > 90) messageIndex = 6;
             
-            loadingText.textContent = `${loadingMessages[messageIndex]}... ${percent}%`;
+            // Apply text animation
+            loadingText.style.opacity = '0.8';
+            setTimeout(() => {
+                loadingText.textContent = `${loadingMessages[messageIndex]}... ${percent}%`;
+                loadingText.style.opacity = '1';
+                // Add subtle pulse effect
+                loadingText.classList.add('pulse-text');
+                setTimeout(() => loadingText.classList.remove('pulse-text'), 300);
+            }, 150);
         }
         
+        // Log progress for debugging
+        console.log(`Image loading progress: ${imagesLoaded}/${totalImages} (${Math.round((imagesLoaded / totalImages) * 100)}%)`);
+        
         if (imagesLoaded >= totalImages) {
-            // All images loaded, hide preloader with a small delay
-            setTimeout(hidePreloader, 800);
+            // All images loaded, mark assets as loaded
+            assetsLoaded = true;
+            console.log('All images loaded successfully');
+            
+            // Hide preloader with a small delay if not already hidden
+            if (!preloaderRemoved) {
+                // Ensure we're not removing the preloader too early
+                setTimeout(() => {
+                    // Double-check that we're ready to remove the preloader
+                    const allImagesComplete = Array.from(document.querySelectorAll('img')).every(img => {
+                        // Check if image is complete and has dimensions
+                        const isComplete = img.complete;
+                        const hasDimensions = img.naturalWidth > 0;
+                        
+                        // Log problematic images for debugging
+                        if (!isComplete || !hasDimensions) {
+                            console.warn('Problematic image:', img.src, 'Complete:', isComplete, 'Has dimensions:', hasDimensions);
+                        }
+                        
+                        return isComplete && hasDimensions;
+                    });
+                    
+                    if (allImagesComplete) {
+                        console.log('Verified all images are complete, removing preloader');
+                        hidePreloader();
+                        
+                        // Fix layout after all images are loaded
+                        if (!window.layoutFixed) {
+                            fixGalleryLayout();
+                            window.layoutFixed = true;
+                        }
+                    } else {
+                        console.log('Some images still loading despite counter completion, forcing preloader removal');
+                        // Force remove preloader after a short delay
+                        setTimeout(hidePreloader, 500);
+                    }
+                }, 800);
+            }
         }
     }
     
-    // Fallback - hide preloader after 6 seconds even if not all images have loaded
+    // Diagnostic check - log warning if preloader is still active after 5 seconds
+    // This doesn't force remove the preloader but provides diagnostic information
     setTimeout(function() {
-        if (preloader && preloader.style.display !== 'none') {
-            if (loadingText) loadingText.textContent = 'Ready to explore!';
-            setTimeout(hidePreloader, 500);
+        if (!preloaderRemoved) {
+            console.log('Diagnostic check: Preloader still active after 5 seconds');
+            console.log(`Image loading status: ${imagesLoaded}/${totalImages} images loaded`);
+            
+            // Check for any problematic images that might be causing delays
+            const pendingImages = Array.from(document.querySelectorAll('img')).filter(img => !img.complete);
+            if (pendingImages.length > 0) {
+                console.log(`Still waiting for ${pendingImages.length} images to complete loading`);
+                pendingImages.forEach((img, index) => {
+                    if (index < 5) { // Limit logging to first 5 images to avoid console spam
+                        console.log(`Pending image ${index + 1}: ${img.src || 'No src attribute'}`);
+                    }
+                });
+            }
+            
+            // Force preloader removal after diagnostic check
+            console.log('Forcing preloader removal after diagnostic check');
+            hidePreloader();
         }
-    }, 6000);
+    }, 5000);
+    
+    // Fallback safety mechanism - force remove preloader after a maximum time
+    // This ensures the site is always usable even if some resources fail to load
+    setTimeout(function() {
+        if (!preloaderRemoved) {
+            console.log('Emergency fallback: Forcing preloader removal after maximum wait time');
+            // Check if any specific resources are still loading
+            const pendingImages = Array.from(document.querySelectorAll('img')).filter(img => !img.complete);
+            if (pendingImages.length > 0) {
+                console.log(`Abandoning wait for ${pendingImages.length} images that failed to load`);
+            }
+            
+            // Force remove preloader regardless of resource loading state
+            hidePreloader();
+        }
+    }, 8000);
+
 });
 
-// Also hide preloader on window load as a fallback
+// Handle window load event - ensure preloader is removed when all page assets are loaded
 window.addEventListener('load', function() {
+    console.log('Window load event triggered');
+    // Mark assets as loaded
+    assetsLoaded = true;
+    
+    // Give a small delay to ensure smooth transition and all resources are properly processed
     setTimeout(function() {
-        if (document.getElementById('preloader').style.display !== 'none') {
-            const preloader = document.getElementById('preloader');
-            preloader.classList.add('fade-out');
-            document.body.classList.remove('loading');
+        // Only proceed if preloader is still visible and has been initialized
+        if (preloaderInitialized && !preloaderRemoved) {
+            console.log('Window load event - forcing preloader removal');
             
-            setTimeout(function() {
-                preloader.style.display = 'none';
-            }, 500);
+            // Use our hidePreloader function for consistency
+            hidePreloader();
+            
+            // Fix layout after window load if not already done
+            if (!window.layoutFixed) {
+                fixGalleryLayout();
+                window.layoutFixed = true;
+            }
+        } else {
+            console.log('Preloader already removed or not initialized');
         }
-    }, 800);
+    }, 500); // Reduced delay for better user experience
+    
+    // Ensure any animations or transitions that depend on load are triggered
+    document.dispatchEvent(new Event('assetsLoaded'));
 });
+
+// Function to filter gallery by category
+function filterGallery(category) {
+    // Reset all items first
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    galleryItems.forEach(item => {
+        item.style.display = 'none';
+        item.classList.remove('fade-in');
+    });
+    
+    // Show only the initial items for the selected category
+    const selectedItems = document.querySelectorAll(
+        category === 'all' 
+            ? '.gallery-item' 
+            : `.gallery-item[data-category="${category}"]`
+    );
+    
+    const rowsToShowInitially = 2;
+    const itemsPerRow = calculateItemsPerRow();
+    
+    // Apply staggered animation to visible items
+    selectedItems.forEach((item, index) => {
+        if (index < rowsToShowInitially * itemsPerRow) {
+            item.style.display = 'block';
+            item.classList.remove('hidden-photo');
+            
+            // Apply staggered animation with delay based on position
+            setTimeout(() => {
+                item.classList.add('fade-in');
+            }, index * 80); // 80ms delay between each item
+        } else {
+            item.style.display = 'none';
+            item.classList.add('hidden-photo');
+        }
+    });
+    
+    // Show or hide the load more button based on whether there are more items
+    const loadMoreButton = document.querySelector('.text-center.mt-12 button');
+    if (loadMoreButton) {
+        if (selectedItems.length > rowsToShowInitially * itemsPerRow) {
+            loadMoreButton.style.display = 'inline-flex';
+        } else {
+            loadMoreButton.style.display = 'none';
+        }
+    }
+}
+
+// Function to fix gallery layout issues
+function fixGalleryLayout() {
+    console.log('Fixing gallery layout...');
+    
+    // Force a reflow of the gallery grid
+    const galleryGrid = document.querySelector('.grid');
+    if (galleryGrid) {
+        // Get all gallery items
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        // Temporarily hide all items and remove fade-in class
+        galleryItems.forEach(item => {
+            item.style.opacity = '0';
+            item.style.transition = 'none';
+            item.classList.remove('fade-in');
+        });
+        
+        // Force a reflow
+        void galleryGrid.offsetWidth;
+        
+        // Reinitialize the gallery
+        const activeCategory = document.querySelector('.category-btn.active')?.getAttribute('data-category') || 'all';
+        filterGallery(activeCategory); // filterGallery will handle the staggered animation
+        
+        // Show items with a staggered fade-in for any that weren't handled by filterGallery
+        galleryItems.forEach((item, index) => {
+            if (item.style.display !== 'none' && !item.classList.contains('fade-in')) {
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transition = 'opacity 0.3s ease';
+                    item.classList.add('fade-in');
+                }, index * 50);
+            }
+        });
+    }
+}
 
 // Mobile menu toggle
 document.getElementById('mobile-menu-button').addEventListener('click', function() {
@@ -146,6 +461,9 @@ document.getElementById('mobile-menu-button').addEventListener('click', function
 function initializeGallery() {
     const categories = ['wildlife', 'flowers', 'scenery', 'monuments', 'lunar', 'others'];
     const rowsToShowInitially = 2; // Show only 2 rows initially
+    
+    // Flag to track if layout has been fixed after initial load
+    window.layoutFixed = false;
     
     // Calculate items per row based on actual layout
     function calculateItemsPerRow() {
@@ -310,45 +628,26 @@ categoryButtons.forEach(button => {
         
         const category = this.getAttribute('data-category');
         
-        // Reset all items first
-        galleryItems.forEach(item => {
-            item.style.display = 'none';
-            item.classList.remove('fade-in');
-        });
-        
-        // Show only the initial items for the selected category
-        const selectedItems = document.querySelectorAll(
-            category === 'all' 
-                ? '.gallery-item' 
-                : `.gallery-item[data-category="${category}"]`
-        );
-        
-        const rowsToShowInitially = 2;
-        const itemsPerRow = calculateItemsPerRow();
-        
-        selectedItems.forEach((item, index) => {
-            if (index < rowsToShowInitially * itemsPerRow) {
-                item.style.display = 'block';
-                item.classList.add('fade-in');
-                item.classList.remove('hidden-photo');
-            } else {
-                item.style.display = 'none';
-                item.classList.add('hidden-photo');
-            }
-        });
-        
-        // Show or hide the load more button based on whether there are more items
-        const loadMoreButton = document.querySelector('.text-center.mt-12 button');
-        if (selectedItems.length > rowsToShowInitially * itemsPerRow) {
-            loadMoreButton.style.display = 'inline-flex';
-        } else {
-            loadMoreButton.style.display = 'none';
-        }
+        // Use the filterGallery function to handle the filtering
+        filterGallery(category);
     });
 });
 
 // Set 'All Photos' as active by default
 document.querySelector('.category-btn[data-category="all"]').classList.add('active');
+
+// Handle window resize to fix layout issues
+let resizeTimer;
+window.addEventListener('resize', function() {
+    // Clear the previous timer
+    clearTimeout(resizeTimer);
+    
+    // Set a new timer to avoid excessive recalculations during resize
+    resizeTimer = setTimeout(function() {
+        // Fix layout after resize completes
+        fixGalleryLayout();
+    }, 250); // Wait for resize to finish before recalculating
+});
 
 // Lightbox functionality
 let currentImageIndex = 0;
@@ -503,11 +802,15 @@ document.querySelector('.text-center.mt-12 button').addEventListener('click', fu
             : `.gallery-item[data-category="${activeCategory}"].hidden-photo`
     );
     
-    // Show all remaining photos
-    hiddenPhotos.forEach(photo => {
+    // Show all remaining photos with staggered animation
+    hiddenPhotos.forEach((photo, index) => {
         photo.style.display = 'block';
-        photo.classList.add('fade-in');
         photo.classList.remove('hidden-photo');
+        
+        // Apply staggered animation with delay based on position
+        setTimeout(() => {
+            photo.classList.add('fade-in');
+        }, index * 80); // 80ms delay between each item
     });
     
     // Always hide the load more button after clicking
