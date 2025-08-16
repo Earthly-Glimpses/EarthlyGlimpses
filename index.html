@@ -108,7 +108,7 @@
                     <a href="#purchase" class="text-gray-700 hover:text-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-50 transition-all duration-300 flex items-center dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:bg-gray-800">
                         <i class="fas fa-shopping-cart mr-2 opacity-70"></i>Prints
                     </a>
-                    <a href="#contact" class="text-gray-700 hover:text-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-50 transition-all duration-300 flex items-center dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:bg-gray-800">
+                    <a href="#contact-us" class="text-gray-700 hover:text-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-50 transition-all duration-300 flex items-center dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:bg-gray-800">
                         <i class="fas fa-envelope mr-2 opacity-70"></i>Contact
                     </a>
                     <!-- Theme toggle button -->
@@ -144,7 +144,7 @@
                 <a href="#purchase" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-all duration-300 flex items-center dark:text-gray-300 dark:hover:bg-gray-700">
                     <i class="fas fa-shopping-cart mr-3 text-indigo-500 dark:text-indigo-400"></i>Prints
                 </a>
-                <a href="#contact" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-all duration-300 flex items-center dark:text-gray-300 dark:hover:bg-gray-700">
+                <a href="#contact-us" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-all duration-300 flex items-center dark:text-gray-300 dark:hover:bg-gray-700">
                     <i class="fas fa-envelope mr-3 text-indigo-500 dark:text-indigo-400"></i>Contact
                 </a>
                 <!-- Mobile theme toggle -->
@@ -499,67 +499,122 @@
         </div>
     </section>
 
-    <!-- Lightbox - Full-screen image viewer for gallery photos -->
-    <div id="lightbox" class="lightbox">
-        <div class="lightbox-content">
-            <!-- Main lightbox image display -->
-            <img id="lightbox-img" src="" alt="" class="max-w-full max-h-full">
-            <!-- Close button with backdrop blur effect -->
-            <div class="absolute top-4 right-4 z-10">
-                <button onclick="closeLightbox()" class="text-white text-3xl hover:text-indigo-400 transition-colors duration-300 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center backdrop-blur-sm">
-                    <i class="fas fa-times"></i>
-                </button>
+    <!-- About Section - Information about the photographer -->
+    <section id="about" class="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <span class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm uppercase tracking-wider">Meet the Artist</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-200 mt-2 mb-4">About the Photographer</h2>
+                <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
+                    Capturing nature's most breathtaking moments and transforming them into timeless art pieces
+                </p>
             </div>
-            <!-- Navigation buttons for browsing through images -->
-            <div class="lightbox-nav">
-                <button onclick="navigateLightbox(-1)" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
-                <button onclick="navigateLightbox(1)" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <!-- Left Column - Experience and Bio -->
+                <div class="space-y-8">
+                    <!-- Main Bio -->
+                    <div class="space-y-6">
+                        <h3 class="text-3xl font-bold text-gray-800 dark:text-gray-200">
+                            Passion for Nature's Beauty
+                        </h3>
+                        <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Welcome to Earthly Glimpses, where my passion for photography meets the timeless art of framing. 
+                            Every image tells a story of nature's incredible beauty, captured in those perfect moments when 
+                            light, composition, and emotion align.
+                        </p>
+                        <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                            I believe that nature photography isn't just about taking pictures—it's about preserving 
+                            fleeting moments of beauty and sharing them with the world. Each photograph represents 
+                            hours of patience, countless miles traveled, and a deep connection with the natural world.
+                        </p>
+                        <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Our handcrafted frames are more than just borders; they're carefully selected to enhance 
+                            and protect your artwork, ensuring these natural wonders grace your walls for generations to come.
+                        </p>
             </div>
-            <!-- Caption for displaying image title -->
-            <div id="lightbox-caption" class="text-center text-white text-xl font-medium"></div>
-            <!-- Metadata display with camera information -->
-            <div id="lightbox-meta" class="absolute top-4 left-4 text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded-full backdrop-blur-sm z-10">
-                <i class="fas fa-camera mr-2"></i><span id="lightbox-meta-info"></span>
+
+                    <!-- Experience Timeline -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                            <i class="fas fa-trophy text-indigo-600 mr-3"></i>
+                            Experience & Achievements
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-3 h-3 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-gray-200">Professional Photography</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">2+ years capturing nature's beauty across the globe</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-3 h-3 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-gray-200">Nature Photography</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Specialized in landscape and wildlife photography</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-3 h-3 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-gray-200">Artistic Framing</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Handcrafted frames to enhance your photography</p>
+                                </div>
+                            </div>
             </div>
         </div>
     </div>
 
-    <!-- About Section - Information about the photographer -->
-    <section id="about" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center">
-                <!-- Photographer image - Responsive layout with shadow -->
-                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
-                    <img src="" 
-                         alt="Photographer" class="rounded-lg shadow-xl w-full">
-                </div>
-                <!-- About content with photographer bio -->
-                <div class="md:w-1/2">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-6">About the Photographer</h2>
-                    <!-- Description of photography and framing process -->
-                    <p class="text-gray-600 mb-4">
-                        Welcome to Earthly Glimpses, where we combine stunning nature photography with handcrafted framing. Each piece is carefully assembled in our workshop to ensure the highest quality presentation of these natural wonders.
-                    </p>
-                    <p class="text-gray-600 mb-4">
-                        We specialize in creating heirloom-quality framed nature photography. Each piece starts with a carefully captured image, then gets hand-selected framing to complement both the artwork and your space. Our frames are built to last and protect your investment.
-                    </p>
-                    <p class="text-gray-600 mb-6">
-                        Our work has been featured in National Geographic, Nature's Best Photography, and several international exhibitions. We believe in creating art that lasts - from the archival-quality prints to the solid wood frames that will grace your walls for generations.
-                    </p>
-                    <!-- Social media links with hover effects -->
+                <!-- Right Column - Philosophy and Call to Action -->
+                <div class="space-y-8">
+                    <!-- Philosophy Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl p-6 border border-indigo-100 dark:border-indigo-800">
+                            <div class="text-indigo-600 dark:text-indigo-400 text-2xl mb-3">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">Passion-Driven</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Every shot is taken with love for nature and dedication to the craft</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 border border-green-100 dark:border-green-800">
+                            <div class="text-green-600 dark:text-green-400 text-2xl mb-3">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">Eco-Conscious</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Sustainable practices and respect for the environments we photograph</p>
+                        </div>
+                    </div>
+
+                    <!-- Call to Action -->
+                    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 text-white">
+                        <h4 class="text-xl font-semibold mb-2">Ready to Bring Nature Home?</h4>
+                        <p class="text-indigo-100 mb-4">Explore our collection and find the perfect piece for your space</p>
+                        <a href="#gallery" class="inline-flex items-center bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300">
+                            <i class="fas fa-images mr-2"></i>
+                            View Gallery
+                        </a>
+                    </div>
+
+                    <!-- Social Media Links -->
+                    <div class="flex items-center space-x-6">
+                        <span class="text-gray-600 dark:text-gray-400 font-medium">Follow the Journey:</span>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 text-xl hover-lift">
-                            <i class="fab fa-instagram"></i>
+                            <a href="https://www.instagram.com/earthlyglimpses07/" target="_blank" 
+                               class="bg-gradient-to-r from-pink-500 to-purple-500 text-white p-3 rounded-full hover:scale-110 transition-transform duration-300">
+                                <i class="fab fa-instagram text-xl"></i>
                         </a>
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 text-xl hover-lift">
-                            <i class="fab fa-facebook"></i>
+                            <a href="#" target="_blank" 
+                               class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-3 rounded-full hover:scale-110 transition-transform duration-300">
+                                <i class="fab fa-facebook text-xl"></i>
                         </a>
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 text-xl hover-lift">
-                            <i class="fab fa-500px"></i>
+                            <a href="https://x.com/earthlyglimpses" target="_blank" 
+                               class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-3 rounded-full hover:scale-110 transition-transform duration-300">
+                                <i class="fab fa-twitter text-xl"></i>
                         </a>
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 text-xl hover-lift">
-                            <i class="fab fa-flickr"></i>
-                        </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -617,75 +672,324 @@
     </section>
 
     <!-- Purchase Framed Photos Section - Information about buying framed prints -->
-    <section id="purchase" class="py-16 bg-gray-100 dark:bg-gray-900">
+    <section id="purchase" class="py-20 bg-gradient-to-b from-gray-100 to-white dark:from-gray-900 dark:to-gray-800">
         <div class="max-w-7xl mx-auto px-4"><!-- Container with max width and padding -->
             <!-- Section heading with bold styling -->
-            <h2 class="text-3xl font-bold text-center text-gray-800 dark:text-gray-200 mb-12">Purchase Framed Photos</h2>
-            <!-- White card container with shadow and padding -->
-            <div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md dark:shadow-gray-900">
-                <!-- Subsection heading -->
-                <h3 class="text-xl font-semibold mb-4 dark:text-gray-200">Premium Framed Photography</h3>
-                <!-- Pricing grid - single column on mobile, two columns on medium screens and up -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <!-- Classic wood frames pricing card with hover effect -->
-                    <div class="border border-gray-200 dark:border-gray-700 p-4 rounded-lg hover-lift dark:hover:shadow-gray-900">
-                        <!-- Frame type heading -->
-                        <h4 class="font-bold text-lg mb-2 dark:text-gray-200">Classic Wood Frames</h4>
-                        <!-- Description text -->
-                        <p class="text-gray-600 dark:text-gray-400 mb-3">Handcrafted solid wood frames with museum-quality glass</p>
-                        <!-- Pricing list with vertical spacing -->
-                        <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                            <li>12x18" - $195 (includes matting)</li>
-                            <li>16x24" - $275 (includes matting)</li>
-                            <li>20x30" - $350 (includes matting)</li>
-                        </ul>
+            <div class="text-center mb-12">
+                <span class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm uppercase tracking-wider">Elevate Your Space</span>
+                <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-200 mt-2 mb-4">Premium Framed Photography</h2>
+                <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Transform your home or office with museum-quality prints in handcrafted frames, delivered ready to display.</p>
+            </div>
+            
+            <!-- Frame options with visual previews -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-5xl mx-auto">
+                <!-- Classic wood frames card with image and hover effect -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover-lift transition-all duration-300 transform hover:scale-105 dark:shadow-gray-900 max-w-md mx-auto w-full">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" 
+                             alt="Classic Wood Frame Example" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
                     </div>
-                    <!-- Modern metal frames pricing card with hover effect -->
-                    <div class="border border-gray-200 dark:border-gray-700 p-4 rounded-lg hover-lift dark:hover:shadow-gray-900">
-                        <!-- Frame type heading -->
-                        <h4 class="font-bold text-lg mb-2 dark:text-gray-200">Modern Metal Frames</h4>
-                        <!-- Description text -->
-                        <p class="text-gray-600 dark:text-gray-400 mb-3">Sleek aluminum frames with UV-protective acrylic</p>
-                        <!-- Pricing list with vertical spacing -->
-                        <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                            <li>12x18" - $225 (floating mount)</li>
-                            <li>16x24" - $295 (floating mount)</li>
-                            <li>20x30" - $375 (floating mount)</li>
-                        </ul>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 text-xs px-3 py-1 rounded-full">Most Popular</span>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2 dark:text-gray-200">Classic Wood Frames</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">Timeless handcrafted solid wood frames with museum-quality glass and acid-free matting.</p>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700 dark:text-gray-300">12×18"</span>
+                                <span class="font-semibold dark:text-gray-200">$195</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700 dark:text-gray-300">16×24"</span>
+                                <span class="font-semibold dark:text-gray-200">$275</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700 dark:text-gray-300">20×30"</span>
+                                <span class="font-semibold dark:text-gray-200">$350</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- What's included section with margin bottom -->
-                <div class="mb-6">
-                    <!-- Section heading -->
-                    <h4 class="font-bold text-lg mb-2 dark:text-gray-200">What's Included:</h4>
-                    <!-- Feature list with vertical spacing -->
-                    <ul class="text-gray-600 dark:text-gray-400 space-y-2">
-                        <!-- Feature item with check icon -->
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-indigo-600 mr-2 mt-1"></i>
-                            <span>Archival-quality photo print on premium paper</span>
-                        </li>
-                        <!-- Feature item with check icon -->
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-indigo-600 mr-2 mt-1"></i>
-                            <span>Professional framing with protective glazing</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-indigo-600 mr-2 mt-1"></i>
-                            <span>Ready-to-hang hardware installed</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-indigo-600 mr-2 mt-1"></i>
-                            <span>Protective packaging for safe shipping</span>
-                        </li>
-                    </ul>
+                
+                <!-- Canvas prints card with image and hover effect -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover-lift transition-all duration-300 transform hover:scale-105 dark:shadow-gray-900 max-w-md mx-auto w-full">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1577083552431-6e5fd01988a5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" 
+                             alt="Canvas Print Example" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-xs px-3 py-1 rounded-full">New Option</span>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2 dark:text-gray-200">Custom Prints</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">Custom prints and wood frames. We offer custom framing options for your photos, including custom sizes, shapes, and finishes. Plus, we offer custom photo printing services for your special events, birthdays, and more.</p>
+                        <div class="space-y-2 mb-4">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm italic">The price may vary according to the customer's requirements.</p>
+                            </div>
+                    </div>
                 </div>
-                <div class="text-center">
-                    <p class="text-gray-600 dark:text-gray-400 mb-6">Each framed photo is custom made to order. Contact us with your preferred image and frame style.</p>
-                    <a href="#" id="order-framed-photo" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block btn-modern">
-                        Order Framed Photo
+            </div>
+            
+            <!-- Call to action section -->
+            <div class="text-center mb-16">
+                <h3 class="text-2xl font-bold mb-6 dark:text-gray-200">Ready to Order Your Custom Framed Photo?</h3>
+                <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">Each framed photo is custom made to order. Browse our gallery, select your favorite image, and choose your preferred frame style.</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#gallery" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-flex items-center justify-center">
+                        <i class="fas fa-images mr-2"></i> Browse Gallery
+                    </a>
+                    <a href="#contact-us" class="bg-white hover:bg-gray-100 text-indigo-600 border border-indigo-600 font-bold py-3 px-8 rounded-full transition duration-300 inline-flex items-center justify-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-indigo-400 dark:border-indigo-400">
+                        <i class="fas fa-envelope mr-2"></i> Contact Us
                     </a>
                 </div>
+            </div>
+            
+            <!-- Premium features section -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-16 dark:shadow-gray-900">
+                <h3 class="text-2xl font-bold mb-6 text-center dark:text-gray-200">The Earthly Glimpses Difference</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Feature 1 -->
+                    <div class="text-center p-4">
+                        <div class="bg-indigo-100 dark:bg-indigo-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-award text-2xl text-indigo-600 dark:text-indigo-400"></i>
+                        </div>
+                        <h4 class="font-semibold mb-2 dark:text-gray-200">Quality Prints</h4>
+
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Each photo is shot by our own photographer, ensuring high quality and authenticity</p>
+
+
+                    </div>
+                    
+                    <!-- Feature 2 -->
+                    <div class="text-center p-4">
+                        <div class="bg-indigo-100 dark:bg-indigo-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-tools text-2xl text-indigo-600 dark:text-indigo-400"></i>
+                        </div>
+                        <h4 class="font-semibold mb-2 dark:text-gray-200">Handcrafted Frames</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Each frame is custom built by skilled craftspeople using premium materials</p>
+                    </div>
+                    
+                    <!-- Feature 3 -->
+                    <div class="text-center p-4">
+                        <div class="bg-indigo-100 dark:bg-indigo-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-shipping-fast text-2xl text-indigo-600 dark:text-indigo-400"></i>
+                        </div>
+                        <h4 class="font-semibold mb-2 dark:text-gray-200">Secure Shipping</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Custom packaging ensures your artwork arrives in perfect condition</p>
+                    </div>
+                    
+                    <!-- Feature 4 -->
+                    <div class="text-center p-4">
+                        <div class="bg-indigo-100 dark:bg-indigo-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-certificate text-2xl text-indigo-600 dark:text-indigo-400"></i>
+                        </div>
+                        <h4 class="font-semibold mb-2 dark:text-gray-200">Custom Frames & Photos</h4>
+
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">We offer custom framing options for your photos, including custom sizes, shapes, and finishes. Plus, we offer custom photo printing services for your special events, birthdays, and more.</p>
+
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonials section -->
+            <div class="mb-16">
+                <!-- <h3 class="text-2xl font-bold mb-8 text-center dark:text-gray-200">What Our Customers Say</h3> -->
+                
+                <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6"> -->
+                    <!-- Testimonial 1 -->
+                    <!-- <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-gray-900">
+                        <div class="flex items-center mb-4">
+                            <div class="text-amber-400 flex">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 italic">"The framed print exceeded my expectations. The colors are vibrant and the craftsmanship of the frame is exceptional. It's now the centerpiece of my living room."</p>
+                        <div class="flex items-center">
+                            <div class="ml-3">
+                                <h5 class="font-semibold dark:text-gray-200">Sarah M.</h5>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Chicago, IL</p>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    <!-- Testimonial 2 -->
+                    <!-- <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-gray-900">
+                        <div class="flex items-center mb-4">
+                            <div class="text-amber-400 flex">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 italic">"I purchased a metal framed landscape photo for my office and have received countless compliments. The quality is outstanding and the customer service was excellent."</p>
+                        <div class="flex items-center">
+                            <div class="ml-3">
+                                <h5 class="font-semibold dark:text-gray-200">Michael J.</h5>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Boston, MA</p>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    <!-- Testimonial 3 -->
+                    <!-- <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-gray-900">
+                        <div class="flex items-center mb-4">
+                            <div class="text-amber-400 flex">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 italic">"The canvas print I ordered is absolutely stunning. The colors are true to the online image and the quality is exceptional. Will definitely be ordering more!"</p>
+                        <div class="flex items-center">
+                            <div class="ml-3">
+                                <h5 class="font-semibold dark:text-gray-200">Emily R.</h5>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Seattle, WA</p>
+                            </div>
+                        </div>
+                    </div> -->
+
+
+
+                    <!-- Testimonial 4 -->
+                    <!-- <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-gray-900">
+                        <div class="flex items-center mb-4">
+                            <div class="text-amber-400 flex">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 italic">"I ordered three different prints for my office and they all look stunning. The metal frames give them a modern look that fits perfectly with our decor."</p>
+                        <div class="flex items-center">
+                            <div class="ml-3">
+                                <h5 class="font-semibold dark:text-gray-200">James T.</h5>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Austin, TX</p>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    <!-- Testimonial 5 -->
+                    <!-- <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-gray-900">
+                        <div class="flex items-center mb-4">
+                            <div class="text-amber-400 flex">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 italic">"The canvas print I ordered as a gift for my wife was absolutely beautiful. The packaging was secure and the print arrived in perfect condition."</p>
+                        <div class="flex items-center">
+                            <div class="ml-3">
+                                <h5 class="font-semibold dark:text-gray-200">Michael R.</h5>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Seattle, WA</p>
+                            </div>
+                        </div>
+                    </div> -->
+
+
+                <!-- </div> -->
+            </div>
+            
+            <!-- Call to action -->
+            <!-- <div class="text-center">
+                <h3 class="text-2xl font-bold mb-4 dark:text-gray-200">Ready to Order Your Custom Framed Photo?</h3>
+                <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">Each framed photo is custom made to order. Browse our gallery, select your favorite image, and choose your preferred frame style.</p>
+                <a href="#gallery" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-full transition duration-300 inline-block btn-modern">
+                    <i class="fas fa-images mr-2"></i> Browse Gallery
+                </a>
+                <a href="#contact-us" class="ml-4 bg-white hover:bg-gray-100 text-indigo-600 font-bold py-4 px-10 rounded-full border border-indigo-600 transition duration-300 inline-block dark:bg-transparent dark:text-indigo-400 dark:border-indigo-400 dark:hover:bg-gray-800">
+                    <i class="fas fa-envelope mr-2"></i> Contact Us
+                </a>
+            </div> -->
+        </div>
+    </section>
+    
+    <!-- Contact Us Section - Social Media and Communication Links -->
+    <section id="contact-us" class="py-16 bg-gradient-to-b from-white to-gray-100 dark:from-gray-800 dark:to-gray-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm uppercase tracking-wider">Stay Connected</span>
+                <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-200 mt-2 mb-4">Connect With Us</h2>
+                <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Have questions about our framed photos or want to place a custom order? Reach out to us through any of these channels:</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <!-- Email Contact Card -->
+                <a href="mailto:earthlyglimpses72@gmail.com" class="group bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 dark:shadow-gray-900">
+                    <div class="h-24 bg-indigo-600 dark:bg-indigo-800 flex items-center justify-center">
+                        <i class="fas fa-envelope text-4xl text-white"></i>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold text-xl mb-2 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">Email</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">earthlyglimpses72@gmail.com</p>
+                        <span class="inline-block px-4 py-2 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 font-medium text-sm">
+                            Send Message <i class="fas fa-arrow-right ml-1"></i>
+                        </span>
+                    </div>
+                </a>
+                
+                <!-- Instagram Card -->
+                <a href="https://www.instagram.com/earthlyglimpses07/" target="_blank" rel="noopener noreferrer" class="group bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 dark:shadow-gray-900">
+                    <div class="h-24 bg-gradient-to-r from-purple-600 to-pink-500 flex items-center justify-center">
+                        <i class="fab fa-instagram text-4xl text-white"></i>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold text-xl mb-2 dark:text-gray-200 group-hover:text-pink-500 dark:group-hover:text-pink-400 transition-colors duration-300">Instagram</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">@earthlyglimpses07</p>
+                        <span class="inline-block px-4 py-2 rounded-full bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-400 font-medium text-sm">
+                            Follow Us <i class="fas fa-arrow-right ml-1"></i>
+                        </span>
+                    </div>
+                </a>
+                
+                <!-- Facebook Card -->
+                <a href="https://facebook.com/earthlyglimpses" target="_blank" rel="noopener noreferrer" class="group bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 dark:shadow-gray-900">
+                    <div class="h-24 bg-blue-600 dark:bg-blue-800 flex items-center justify-center">
+                        <i class="fab fa-facebook-f text-4xl text-white"></i>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold text-xl mb-2 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">Facebook</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">EarthlyGlimpses</p>
+                        <span class="inline-block px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 font-medium text-sm">
+                            Like & Share <i class="fas fa-arrow-right ml-1"></i>
+                        </span>
+                    </div>
+                </a>
+                
+                <!-- X(Twitter) Card -->
+                <a href="https://x.com/earthlyglimpses" target="_blank" rel="noopener noreferrer" class="group bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 dark:shadow-gray-900">
+                    <div class="h-24 bg-cyan-500 dark:bg-cyan-700 flex items-center justify-center">
+                        <i class="fab fa-twitter text-4xl text-white"></i>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold text-xl mb-2 dark:text-gray-200 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors duration-300">X(a.k.a Twitter)</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">@earthlyglimpses</p>
+                        <span class="inline-block px-4 py-2 rounded-full bg-cyan-100 dark:bg-cyan-900 text-cyan-600 dark:text-cyan-400 font-medium text-sm">
+                            Follow Us <i class="fas fa-arrow-right ml-1"></i>
+                        </span>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="text-center">
+                <p class="text-gray-600 dark:text-gray-400 mb-6">We typically respond to all inquiries within 24 hours.</p>
+                <a href="#contact" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block btn-modern">
+                    <i class="fas fa-paper-plane mr-2"></i> Having Concern or wanna Collaborate?
+                </a>
             </div>
         </div>
     </section>
@@ -708,41 +1012,41 @@
                     <!-- Contact details container with vertical spacing -->
                     <div class="space-y-4">
                         <!-- Email contact item with hover effect -->
-                        <div class="flex items-start hover-lift">
+                        <a href="mailto:earthlyglimpses72@gmail.com" class="flex items-start hover-lift group">
                             <!-- Icon container with indigo color -->
-                            <div class="text-indigo-600 mr-4 mt-1">
+                            <div class="text-indigo-600 mr-4 mt-1 group-hover:text-indigo-700 transition-colors duration-300">
                                 <i class="fas fa-envelope"></i>
                             </div>
                             <!-- Email contact details -->
                             <div>
-                                <h4 class="font-semibold dark:text-gray-200">Email</h4>
-                                <p class="text-gray-600 dark:text-gray-400">contact@naturescanvas.com</p>
+                                <h4 class="font-semibold dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">Email</h4>
+                                <p class="text-gray-600 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">earthlyglimpses72@gmail.com</p>
                             </div>
-                        </div>
+                        </a>
                         <!-- Phone contact item with hover effect -->
-                        <div class="flex items-start hover-lift">
+                        <!-- <div class="flex items-start hover-lift"> -->
                             <!-- Phone icon -->
-                            <div class="text-indigo-600 mr-4 mt-1">
+                            <!-- <div class="text-indigo-600 mr-4 mt-1">
                                 <i class="fas fa-phone"></i>
-                            </div>
+                            </div> -->
                             <!-- Phone contact details -->
-                            <div>
+                            <!-- <div>
                                 <h4 class="font-semibold dark:text-gray-200">Phone</h4>
                                 <p class="text-gray-600 dark:text-gray-400">+1 (555) 123-4567</p>
-                            </div>
-                        </div>
+                            </div> -->
+                        <!-- </div>  -->
                         <!-- Location contact item with hover effect -->
-                        <div class="flex items-start hover-lift">
+                        <!-- <div class="flex items-start hover-lift"> -->
                             <!-- Location icon -->
-                            <div class="text-indigo-600 mr-4 mt-1">
+                            <!-- <div class="text-indigo-600 mr-4 mt-1">
                                 <i class="fas fa-map-marker-alt"></i>
-                            </div>
+                            </div> -->
                             <!-- Location contact details -->
-                            <div>
+                            <!-- <div>
                                 <h4 class="font-semibold dark:text-gray-200">Studio</h4>
                                 <p class="text-gray-600 dark:text-gray-400">123 Nature Way, Boulder, CO 80301</p>
-                            </div>
-                        </div>
+                            </div> -->
+                        <!-- </div> -->
                     </div>
                     <!-- Social media section with top margin -->
                     <div class="mt-8">
@@ -751,7 +1055,7 @@
                         <!-- Social media icons container with horizontal spacing -->
                         <div class="flex space-x-4">
                             <!-- Instagram social link with hover effect -->
-                            <a href="#" class="bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700 transition hover-lift">
+                            <a href="https://www.instagram.com/earthlyglimpses07/" target="_blank" class="bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700 transition hover-lift">
                                 <i class="fab fa-instagram"></i>
                             </a>
                             <!-- Facebook social link with hover effect -->
@@ -763,9 +1067,9 @@
                                 <i class="fab fa-twitter"></i>
                             </a>
                             <!-- 500px social link with hover effect -->
-                            <a href="#" class="bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700 transition hover-lift">
+                            <!-- <a href="#" class="bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700 transition hover-lift">
                                 <i class="fab fa-500px"></i>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </div>
@@ -810,9 +1114,9 @@
                             <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                         </div>
                         <!-- Submit button with hover and transition effects -->
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 w-full btn-modern">
+                        <a href="mailto:earthlyglimpses72@gmail.com" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 w-full btn-modern inline-block text-center">
                             Send Message
-                        </button>
+                        </a>
                     </form>
                 </div>
             </div>
@@ -838,7 +1142,7 @@
                 <!-- Social media links container with horizontal spacing -->
                 <div class="flex space-x-6">
                     <!-- Instagram social link with hover effect -->
-                    <a href="#" class="text-gray-400 hover:text-white transition hover-lift">
+                    <a href="https://www.instagram.com/earthlyglimpses07/" target="_blank" class="text-gray-400 hover:text-white transition hover-lift">
                         <i class="fab fa-instagram"></i>
                     </a>
                     <!-- Facebook social link with hover effect -->
@@ -846,13 +1150,13 @@
                         <i class="fab fa-facebook"></i>
                     </a>
                     <!-- Twitter social link with hover effect -->
-                    <a href="#" class="text-gray-400 hover:text-white transition hover-lift">
+                    <a href="https://x.com/earthlyglimpses" target="_blank" class="text-gray-400 hover:text-white transition hover-lift">
                         <i class="fab fa-twitter"></i>
                     </a>
                     <!-- 500px social link with hover effect -->
-                    <a href="#" class="text-gray-400 hover:text-white transition hover-lift">
+                    <!-- <a href="#" class="text-gray-400 hover:text-white transition hover-lift">
                         <i class="fab fa-500px"></i>
-                    </a>
+                    </a> -->
                 </div>
             </div>
             <!-- Copyright section with top border, margin and padding -->
@@ -886,5 +1190,30 @@
             }, 8000);
         });
     </script>
+
+    <!-- Lightbox - Full-screen image viewer for gallery photos -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <!-- Main lightbox image display -->
+            <img id="lightbox-img" src="" alt="" class="max-w-full max-h-full">
+            <!-- Close button with backdrop blur effect -->
+            <div class="absolute top-4 right-4 z-10">
+                <button onclick="closeLightbox()" class="text-white text-3xl hover:text-indigo-400 transition-colors duration-300 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center backdrop-blur-sm">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <!-- Navigation buttons for browsing through images -->
+            <div class="lightbox-nav">
+                <button onclick="navigateLightbox(-1)" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
+                <button onclick="navigateLightbox(1)" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <!-- Caption for displaying image title -->
+            <div id="lightbox-caption" class="text-center text-white text-xl font-medium"></div>
+            <!-- Metadata display with camera information -->
+            <div id="lightbox-meta" class="absolute top-4 left-4 text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded-full backdrop-blur-sm z-10">
+                <i class="fas fa-camera mr-2"></i><span id="lightbox-meta-info"></span>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

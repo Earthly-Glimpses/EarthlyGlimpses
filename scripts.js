@@ -384,6 +384,64 @@ function filterGallery(category) {
             : `.gallery-item[data-category="${category}"]`
     );
     
+    // Check if there are no images in the selected category
+    if (selectedItems.length === 0) {
+        console.log(`No images found for category: ${category}`);
+        
+        // Remove any existing "no images" message
+        const existingMessage = document.querySelector('.no-images-message');
+        if (existingMessage) {
+            existingMessage.remove();
+            console.log('Removed existing no images message');
+        }
+        
+        // Create and display "no images" message
+        const galleryGrid = document.querySelector('.grid');
+        if (galleryGrid) {
+            const noImagesMessage = document.createElement('div');
+            noImagesMessage.className = 'no-images-message col-span-full text-center py-16';
+            noImagesMessage.innerHTML = `
+                <div class="max-w-md mx-auto">
+                    <div class="text-gray-400 dark:text-gray-500 text-6xl mb-4">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">No images for now</h3>
+                    <p class="text-gray-500 dark:text-gray-500">Will be uploaded soon</p>
+                </div>
+            `;
+            
+            // Insert the message into the gallery grid
+            galleryGrid.appendChild(noImagesMessage);
+            console.log('No images message added to gallery grid');
+            
+            // Force a reflow to ensure the message is properly positioned
+            void galleryGrid.offsetWidth;
+            
+            // Add fade-in animation using CSS classes
+            setTimeout(() => {
+                noImagesMessage.classList.add('show');
+                console.log('No images message animation triggered');
+            }, 100);
+        } else {
+            console.error('Gallery grid not found');
+        }
+        
+        // Hide the load more button since there are no images
+        const loadMoreButton = document.querySelector('.text-center.mt-12 button');
+        if (loadMoreButton) {
+            loadMoreButton.style.display = 'none';
+        }
+        
+        return;
+    }
+    
+    // Remove any existing "no images" message if there are images
+    const existingMessage = document.querySelector('.no-images-message');
+    if (existingMessage) {
+        existingMessage.remove();
+        console.log('Removed existing no images message');
+    }
+    
     const rowsToShowInitially = 2;
     const itemsPerRow = calculateItemsPerRow();
     
@@ -573,7 +631,38 @@ function initializeGallery() {
 }
 
 // Call the function when the page loads
-document.addEventListener('DOMContentLoaded', initializeGallery);
+document.addEventListener('DOMContentLoaded', function() {
+    initializeGallery();
+    
+    // Load More Photos button functionality
+    const loadMoreButton = document.querySelector('.text-center.mt-12 button');
+    if (loadMoreButton) {
+        loadMoreButton.addEventListener('click', function() {
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            
+            // Get all hidden photos for the active category
+            const hiddenPhotos = document.querySelectorAll(
+                activeCategory === 'all' 
+                    ? '.gallery-item.hidden-photo' 
+                    : `.gallery-item[data-category="${activeCategory}"].hidden-photo`
+            );
+            
+            // Show all remaining photos with staggered animation
+            hiddenPhotos.forEach((photo, index) => {
+                photo.style.display = 'block';
+                photo.classList.remove('hidden-photo');
+                
+                // Apply staggered animation with delay based on position
+                setTimeout(() => {
+                    photo.classList.add('fade-in');
+                }, index * 80); // 80ms delay between each item
+            });
+            
+            // Always hide the load more button after clicking
+            this.style.display = 'none';
+        });
+    }
+});
 
 // Category filter
 const categoryButtons = document.querySelectorAll('.category-btn');
@@ -627,6 +716,7 @@ categoryButtons.forEach(button => {
         this.classList.add('active');
         
         const category = this.getAttribute('data-category');
+        console.log(`Category button clicked: ${category}`);
         
         // Use the filterGallery function to handle the filtering
         filterGallery(category);
@@ -653,6 +743,17 @@ window.addEventListener('resize', function() {
 let currentImageIndex = 0;
 const images = Array.from(document.querySelectorAll('.gallery-item img'));
 
+// Initialize lightbox properties
+function initializeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    
+    // Set initial properties
+    lightbox.style.display = 'none';
+}
+
+// Call initialization on page load
+document.addEventListener('DOMContentLoaded', initializeLightbox);
+
 function openLightbox(imgElement) {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
@@ -669,10 +770,18 @@ function openLightbox(imgElement) {
     
     // Get and set meta information if available
     if (galleryItem) {
-        const metaInfo = galleryItem.querySelector('.meta-info');
-        if (metaInfo) {
-            const location = metaInfo.querySelector('.location')?.textContent || '';
-            const camera = metaInfo.querySelector('.camera')?.textContent || '';
+        const locationElement = galleryItem.querySelector('p.text-sm.text-gray-600, p.text-sm.text-gray-600.dark\\:text-gray-400');
+        const cameraElement = galleryItem.querySelector('span.text-xs.text-gray-500, span.text-xs.text-gray-500.dark\\:text-gray-400');
+        
+        if (locationElement && cameraElement) {
+            // Extract location text (remove the icon and get just the location)
+            const locationText = locationElement.textContent.trim();
+            const location = locationText.replace(/^.*?•\s*/, '').replace(/^.*?\s/, '').trim();
+            
+            // Extract camera text (remove the icon and get just the camera model)
+            const cameraText = cameraElement.textContent.trim();
+            const camera = cameraText.replace(/^.*?•\s*/, '').replace(/^.*?\s/, '').trim();
+            
             lightboxMetaInfo.textContent = `${location} • ${camera}`;
         } else {
             lightboxMetaInfo.textContent = '';
@@ -722,30 +831,40 @@ function navigateLightbox(direction) {
     const lightboxCaption = document.getElementById('lightbox-caption');
     const lightboxMetaInfo = document.getElementById('lightbox-meta-info');
     const currentImg = images[currentImageIndex];
-    const galleryItem = currentImg.closest('.gallery-item');
     
-    // Reset and then apply scale for transition effect
+    // Apply a quick scale down effect
     lightboxImg.style.transform = 'scale(0.98)';
     
-    // Update image and caption
-    lightboxImg.src = currentImg.src;
-    lightboxCaption.textContent = currentImg.alt;
-    
-    // Update meta information
-    if (galleryItem) {
-        const metaInfo = galleryItem.querySelector('.meta-info');
-        if (metaInfo) {
-            const location = metaInfo.querySelector('.location')?.textContent || '';
-            const camera = metaInfo.querySelector('.camera')?.textContent || '';
-            lightboxMetaInfo.textContent = `${location} • ${camera}`;
-        } else {
-            lightboxMetaInfo.textContent = '';
-        }
-    }
-    
-    // Apply scale effect after a short delay
+    // Update image and caption after a short delay
     setTimeout(() => {
-        lightboxImg.style.transform = 'scale(1.02)';
+        lightboxImg.src = currentImg.src;
+        lightboxCaption.textContent = currentImg.alt;
+        
+        // Get and set meta information if available
+        const galleryItem = currentImg.closest('.gallery-item');
+        if (galleryItem) {
+            const locationElement = galleryItem.querySelector('p.text-sm.text-gray-600, p.text-sm.text-gray-600.dark\\:text-gray-400');
+            const cameraElement = galleryItem.querySelector('span.text-xs.text-gray-500, span.text-xs.text-gray-500.dark\\:text-gray-400');
+            
+            if (locationElement && cameraElement) {
+                // Extract location text (remove the icon and get just the location)
+                const locationText = locationElement.textContent.trim();
+                const location = locationText.replace(/^.*?•\s*/, '').replace(/^.*?\s/, '').trim();
+                
+                // Extract camera text (remove the icon and get just the camera model)
+                const cameraText = cameraElement.textContent.trim();
+                const camera = cameraText.replace(/^.*?•\s*/, '').replace(/^.*?\s/, '').trim();
+                
+                lightboxMetaInfo.textContent = `${location} • ${camera}`;
+            } else {
+                lightboxMetaInfo.textContent = '';
+            }
+        }
+        
+        // Apply scale up effect after image is updated
+        setTimeout(() => {
+            lightboxImg.style.transform = 'scale(1.02)';
+        }, 50);
     }, 100);
 }
 
@@ -770,53 +889,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        
-        window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-        });
-        
-        // Close mobile menu if open
-        const mobileMenu = document.getElementById('mobile-menu');
-        if (!mobileMenu.classList.contains('hidden')) {
-            mobileMenu.classList.add('hidden');
-        }
-    });
-});
-
-// Load More Photos button functionality
-document.querySelector('.text-center.mt-12 button').addEventListener('click', function() {
-    const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
-    
-    // Get all hidden photos for the active category
-    const hiddenPhotos = document.querySelectorAll(
-        activeCategory === 'all' 
-            ? '.gallery-item.hidden-photo' 
-            : `.gallery-item[data-category="${activeCategory}"].hidden-photo`
-    );
-    
-    // Show all remaining photos with staggered animation
-    hiddenPhotos.forEach((photo, index) => {
-        photo.style.display = 'block';
-        photo.classList.remove('hidden-photo');
-        
-        // Apply staggered animation with delay based on position
-        setTimeout(() => {
-            photo.classList.add('fade-in');
-        }, index * 80); // 80ms delay between each item
-    });
-    
-    // Always hide the load more button after clicking
-    this.style.display = 'none';
-});
-
 // Recalculate items per row when window is resized
 window.addEventListener('resize', function() {
     // Debounce the resize event to avoid excessive calculations
@@ -831,4 +903,50 @@ window.addEventListener('resize', function() {
             activeButton.click();
         }
     }, 250);
+});
+
+// Enhanced email functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle all email links
+    const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+    
+    emailLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Add click feedback
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+            
+            // Close mobile menu if open
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+            
+            // Optional: Add analytics or tracking here
+            console.log('Email link clicked:', this.href);
+        });
+    });
+    
+    // Enhanced email form handling (for future use)
+    const contactForm = document.querySelector('form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const name = formData.get('name') || document.getElementById('name')?.value;
+            const email = formData.get('email') || document.getElementById('email')?.value;
+            const subject = formData.get('subject') || document.getElementById('subject')?.value;
+            const message = formData.get('message') || document.getElementById('message')?.value;
+            
+            // Create mailto link with pre-filled content
+            const mailtoLink = `mailto:earthlyglimpses72@gmail.com?subject=${encodeURIComponent(subject || 'Inquiry from Earthly Glimpses Website')}&body=${encodeURIComponent(`Name: ${name || 'Not provided'}\nEmail: ${email || 'Not provided'}\n\nMessage:\n${message || 'No message provided'}`)}`;
+            
+            // Open email client
+            window.location.href = mailtoLink;
+        });
+    }
 });

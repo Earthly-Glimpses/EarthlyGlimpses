@@ -27,79 +27,43 @@ function initAnimations() {
         delay: 0.2 // Small delay after preloader disappears
     });
     
-    // Gallery items stagger animation
+    // Gallery items stagger animation - simplified for better performance
     gsap.from('.gallery-item', {
         scrollTrigger: {
             trigger: '#gallery',
             start: 'top 80%',
             toggleActions: 'play none none none'
         },
-        opacity: 0.5,
-        y: 20,
-        stagger: 0.05,
-        duration: 0.5,
+        opacity: 0.7,
+        y: 15,
+        stagger: 0.1, // Increased from 0.05 for better performance
+        duration: 0.4, // Reduced from 0.5
         ease: 'power1.out'
     });
     
-    // About section animation
-    gsap.from('#about img', {
-        scrollTrigger: {
-            trigger: '#about',
-            start: 'top 70%',
-        },
-        x: -50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power2.out'
-    });
-    
-    gsap.from('#about .md\\:w-1\\/2:last-child', {
-        scrollTrigger: {
-            trigger: '#about',
-            start: 'top 70%',
-        },
-        x: 50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power2.out'
-    });
-    
-    // Equipment section animation
+    // Equipment section animation - simplified
     gsap.from('#equipment .bg-white', {
         scrollTrigger: {
             trigger: '#equipment',
             start: 'top 80%',
         },
-        y: 30,
+        y: 20,
         opacity: 0,
-        stagger: 0.2,
-        duration: 0.8,
-        ease: 'back.out(1.7)'
+        stagger: 0.3, // Increased from 0.2
+        duration: 0.6, // Reduced from 0.8
+        ease: 'power2.out' // Simplified from back.out
     });
     
-    // Purchase section animation
+    // Purchase section animation - simplified
     gsap.from('#purchase .max-w-3xl', {
         scrollTrigger: {
             trigger: '#purchase',
             start: 'top 80%',
         },
-        scale: 0.9,
+        scale: 0.95,
         opacity: 0,
-        duration: 1,
-        ease: 'power3.out'
-    });
-    
-    // Contact section animation
-    gsap.from('#contact .md\\:w-1\\/2', {
-        scrollTrigger: {
-            trigger: '#contact',
-            start: 'top 70%',
-        },
-        x: -30,
-        opacity: 0,
-        stagger: 0.3,
-        duration: 0.8,
-        ease: 'power2.out'
+        duration: 0.8, // Reduced from 1
+        ease: 'power2.out' // Simplified from power3.out
     });
 }
 
@@ -107,41 +71,22 @@ function initAnimations() {
 
 // Initialize button hover effects
 function initButtonEffects() {
-    // Select all buttons with hover effects
-    const buttons = document.querySelectorAll('.btn, .button, [class*="btn-"]');
-    
-    buttons.forEach(button => {
-        button.addEventListener('mouseenter', function() {
-            gsap.to(this, {
-                scale: 1.05,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        });
-        
-        button.addEventListener('mouseleave', function() {
-            gsap.to(this, {
-                scale: 1,
-                duration: 0.3,
-                ease: 'power2.in'
-            });
-        });
-    });
-    
-    console.log('Button hover effects initialized');
+    // Use CSS transitions instead of GSAP for better performance
+    // The hover effects are now handled by CSS classes
+    console.log('Button hover effects initialized (CSS-based)');
 }
 
 // Initialize Lenis smooth scrolling
 function initSmoothScrolling() {
     lenis = new Lenis({
-        duration: 1,
+        duration: 0.8, // Reduced from 1 for better performance
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 1,
+        wheelMultiplier: 0.8, // Reduced from 1 for smoother scrolling
         smoothTouch: false,
-        touchMultiplier: 2,
+        touchMultiplier: 1.5, // Reduced from 2
         infinite: false,
     });
     
