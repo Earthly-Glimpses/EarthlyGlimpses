@@ -218,27 +218,33 @@
             
             <!-- Gallery Grid - Responsive photo grid with different breakpoints for various screen sizes -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                <!-- Mobile Wallpaper - Gallery item with image and details -->
-                <div class="gallery-item overflow-hidden rounded-lg shadow-md bg-white dark:bg-gray-800 dark:shadow-gray-900 fade-in" data-category="mobile" style="opacity: 1;">
+                <!-- PC Wallpaper - Gallery item with image and details -->
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md bg-white dark:bg-gray-800 dark:shadow-gray-900 fade-in" data-category="desktop" style="opacity: 1;">
                     <!-- Image container with lightbox functionality -->
                     <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1474511320723-9a56873867b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" 
-                             alt="Wild Fox Nature Wallpaper" class="w-full h-64 object-cover cursor-pointer" 
+                        <img src="images/categories/pc/gojoorbxmoon1 preview.jpg" 
+                             alt="GojoxHollowPurple Moon PC Wallpaper" class="w-full h-64 object-cover cursor-pointer" 
                              loading="lazy" decoding="async" fetchpriority="low"
                              onclick="openLightbox(this)">
                         <!-- Category tag -->
-                        <div class="absolute top-3 right-3 bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">Mobile</div>
+                        <div class="absolute top-3 right-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Desktop</div>
                     </div>
                     <!-- Wallpaper details section -->
                     <div class="p-5">
-                        <h3 class="font-bold text-gray-800 dark:text-gray-200 text-lg mb-1">Wild Fox</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><i class="fas fa-mobile-alt mr-1 text-indigo-500"></i> Perfect for Mobile</p>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-200 text-lg mb-1">Satoru Gojo x Hollow Purple</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><i class="fas fa-desktop mr-1 text-blue-500"></i> Perfect for Desktop</p>
                         <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-download mr-1"></i> Free Download</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-download mr-1"></i> Preview Only</span>
                             <div class="flex space-x-2">
-                                <button class="text-indigo-500 hover:text-indigo-700" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
+                                <button class="text-blue-500 hover:text-blue-700" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
                                 <button class="text-blue-500 hover:text-blue-700" onclick="downloadWallpaper(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-download"></i></button>
                             </div>
+                        </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -267,47 +273,59 @@
                 <div class="gallery-item overflow-hidden rounded-lg shadow-md bg-white dark:bg-gray-800 dark:shadow-gray-900 fade-in" data-category="desktop" style="opacity: 1;">
                     <!-- Image container with lightbox functionality -->
                     <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-                             alt="Sunflower Field Desktop Wallpaper" class="w-full h-64 object-cover cursor-pointer" onclick="openLightbox(this)">
+                        <img src="images/categories/pc/megatron pc preview.jpg" 
+                             alt="Megatron PC Wallpaper" class="w-full h-64 object-cover cursor-pointer" onclick="openLightbox(this)">
                         <!-- Category tag with blue theme for desktop -->
                         <div class="absolute top-3 right-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Desktop</div>
                     </div>
                     <!-- Wallpaper details section with title and device info -->
                     <div class="p-5">
-                        <h3 class="font-bold text-gray-800 dark:text-gray-200 text-lg mb-1">Sunflower Bloom</h3>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-200 text-lg mb-1">Megatron</h3>
                         <!-- Device compatibility with desktop icon -->
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><i class="fas fa-desktop mr-1 text-blue-500"></i> Perfect for Desktop</p>
                         <!-- Download info and buttons -->
                         <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-download mr-1"></i> Free Download</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-download mr-1"></i> Preview Only</span>
                             <!-- Expand and download buttons -->
                             <div class="flex space-x-2">
                                 <button class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
                                 <button class="text-blue-500 hover:text-blue-700" onclick="downloadWallpaper(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-download"></i></button>
                             </div>
                         </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Scenery Photos - Gallery item for landscape category -->
-                <div class="gallery-item overflow-hidden rounded-lg shadow-md bg-white dark:bg-gray-800 dark:shadow-gray-900 fade-in" data-category="scenery" style="opacity: 1;">
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md bg-white dark:bg-gray-800 dark:shadow-gray-900 fade-in" data-category="mobile" style="opacity: 1;">
                     <!-- Image container with lightbox functionality -->
                     <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1925&q=80" 
-                             alt="Mountain lake" class="w-full h-64 object-cover cursor-pointer" onclick="openLightbox(this)">
+                        <img src="images/categories/mobile/megatronmobile4x.jpeg" 
+                             alt="Megatron Mobile Wallpaper" class="w-full h-64 object-cover cursor-pointer" onclick="openLightbox(this)">
                         <!-- Category tag with blue theme for landscapes -->
-                        <div class="absolute top-3 right-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Scenery</div>
+                        <div class="absolute top-3 right-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Mobile</div>
                     </div>
                     <!-- Photo details section with title, location and camera info -->
                     <div class="p-5">
-                        <h3 class="font-bold text-gray-800 dark:text-gray-200 text-lg mb-1">Alpine Lake</h3>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-200 text-lg mb-1">Megatron Mobile</h3>
                         <!-- Location with map marker icon -->
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><i class="fas fa-map-marker-alt mr-1 text-blue-500"></i> Swiss Alps</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><i class="fas fa-mobile-alt mr-1 text-blue-500"></i> Perfect for Mobile</p>
                         <!-- Camera info and expand button -->
                         <div class="flex justify-between items-center">
                             <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-camera mr-1"></i> Nikon Z7</span>
                             <!-- Expand button that triggers lightbox for the image -->
                             <button class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
+                        </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -331,6 +349,12 @@
                             <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-camera mr-1"></i> Canon 5D Mark IV</span>
                             <!-- Expand button that triggers lightbox for the image -->
                             <button class="text-amber-500 hover:text-amber-700 dark:hover:text-amber-400" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
+                        </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -358,6 +382,12 @@
                             <!-- Expand button that triggers lightbox for the image -->
                             <button class="text-purple-600 hover:text-purple-800 dark:hover:text-purple-400" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
                         </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 
@@ -383,6 +413,12 @@
                             <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-camera mr-1"></i> Nikon D850</span>
                             <!-- Expand button that triggers lightbox for the image -->
                             <button class="text-indigo-600 hover:text-indigo-800 dark:hover:text-indigo-400" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
+                        </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -410,6 +446,12 @@
                             <!-- Expand button that triggers lightbox for the image -->
                             <button class="text-pink-500 hover:text-pink-700 dark:hover:text-pink-400" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
                         </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 
@@ -435,6 +477,12 @@
                             <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-camera mr-1"></i> Canon EOS 90D</span>
                             <!-- Expand button that triggers lightbox for the image -->
                             <button class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
+                        </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -462,6 +510,12 @@
                             <!-- Expand button that triggers lightbox for the image -->
                             <button class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
                         </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -484,12 +538,18 @@
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><i class="fas fa-crop-alt mr-1 text-orange-500"></i> Available in Custom Sizes</p>
                         <!-- Download info and buttons -->
                         <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-download mr-1"></i> Free Download</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-download mr-1"></i> Preview Only</span>
                             <!-- Expand and download buttons -->
                             <div class="flex space-x-2">
                                 <button class="text-orange-500 hover:text-orange-700" onclick="openLightbox(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-expand-alt"></i></button>
                                 <button class="text-blue-500 hover:text-blue-700" onclick="downloadWallpaper(this.parentNode.parentNode.previousElementSibling.querySelector('img'))"><i class="fas fa-download"></i></button>
                             </div>
+                        </div>
+                        <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 dark:border-amber-400 rounded-r-lg">
+                            <p class="text-amber-800 dark:text-amber-200 text-xs">
+                                <i class="fas fa-info-circle mr-1 text-amber-600 dark:text-amber-400"></i>
+                                <strong>For Full HD resolution & no watermark:</strong> Contact us through the "Connect With Us" section below.
+                            </p>
                         </div>
                     </div>
                 </div>
