@@ -1,0 +1,62 @@
+/* Immediate preloader styles to prevent content flash */
+html.js-loading, body.loading {
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+/* Hide all content except preloader initially */
+body.loading > *:not(#preloader) {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+/* Show content when page is loaded - multiple selectors to ensure content becomes visible */
+body:not(.loading) > *,
+html:not(.js-loading) body > *,
+#preloader.fade-out ~ * {
+    opacity: 1 !important;
+    z-index: 1 !important;
+    position: relative;
+}
+
+/* Ensure content is visible when preloader is removed */
+body:not(.loading) {
+    overflow: auto !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* Ensure preloader is completely removed from stacking context when faded out */
+#preloader.fade-out {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    z-index: -1 !important;
+}
+
+/* Ensure preloader is visible immediately */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-primary, #f5f7fa) 0%, var(--bg-secondary, #e4e8f0) 100%);
+    z-index: 9999;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 1 !important;
+    visibility: visible !important;
+    overflow: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease, z-index 0s 0.5s;
+}
+
+/* Dark mode preloader immediate styles */
+html.dark #preloader {
+    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+}
