@@ -706,7 +706,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadMoreButton = document.querySelector('.text-center.mt-12 button');
     if (loadMoreButton) {
         loadMoreButton.addEventListener('click', function() {
-            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            const activeBtn = document.querySelector('.category-btn.active');
+            const activeCategory = activeBtn ? activeBtn.getAttribute('data-category') : 'all';
             
             // Get all hidden photos for the active category
             const hiddenPhotos = document.querySelectorAll(
@@ -730,6 +731,104 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.display = 'none';
         });
     }
+});
+
+// Ensure every gallery card has a download button
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.gallery-item');
+    cards.forEach(card => {
+        const image = card.querySelector('div.relative img, img');
+        if (!image) return;
+
+        // Find the action row (the container with span and buttons)
+        const actionRow = card.querySelector('.p-5 .flex.justify-between.items-center');
+        if (!actionRow) return;
+
+        // Ensure there is a dedicated button container .flex.space-x-2
+        let controls = actionRow.querySelector('div.flex.space-x-2');
+        if (!controls) {
+            controls = document.createElement('div');
+            controls.className = 'flex space-x-2';
+            // Move any existing button(s) into the controls container
+            const existingButtons = actionRow.querySelectorAll('button');
+            existingButtons.forEach(btn => controls.appendChild(btn));
+            actionRow.appendChild(controls);
+        }
+
+        // Add download button if missing
+        const hasDownload = controls.querySelector('button .fa-download');
+        if (!hasDownload) {
+            const btn = document.createElement('button');
+            btn.className = 'text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 download-wallpaper';
+            btn.setAttribute('type', 'button');
+            btn.innerHTML = '<i class="fas fa-download"></i>';
+            controls.appendChild(btn);
+        }
+
+        // Add enlarge (open lightbox) button if missing
+        const hasExpand = controls.querySelector('button .fa-expand-alt');
+        if (!hasExpand) {
+            const expandBtn = document.createElement('button');
+            expandBtn.className = 'text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 open-lightbox';
+            expandBtn.setAttribute('type', 'button');
+            expandBtn.innerHTML = '<i class="fas fa-expand-alt"></i>';
+            // Prefer placing the enlarge button before download
+            if (controls.firstChild) {
+                controls.insertBefore(expandBtn, controls.firstChild);
+            } else {
+                controls.appendChild(expandBtn);
+            }
+        }
+    });
+});
+
+// Robust handler: open lightbox when clicking any "enlarge" button
+document.addEventListener('click', function(event) {
+    const clickedButton = event.target.closest('button');
+    if (!clickedButton) return;
+    // Detect buttons that visually show the expand icon or are meant to open the lightbox
+    const isExpandButton = clickedButton.querySelector('.fa-expand-alt') || clickedButton.classList.contains('open-lightbox');
+    if (!isExpandButton) return;
+    const galleryItem = clickedButton.closest('.gallery-item');
+    if (!galleryItem) return;
+    const targetImage = galleryItem.querySelector('div.relative img, img');
+    if (targetImage) {
+        event.preventDefault();
+        openLightbox(targetImage);
+    }
+});
+
+// Robust handler: download the image when clicking any "download" button
+document.addEventListener('click', function(event) {
+    const clickedButton = event.target.closest('button');
+    if (!clickedButton) return;
+    const isDownloadButton = clickedButton.querySelector('.fa-download') || clickedButton.classList.contains('download-wallpaper');
+    if (!isDownloadButton) return;
+    const galleryItem = clickedButton.closest('.gallery-item');
+    if (!galleryItem) return;
+    const targetImage = galleryItem.querySelector('div.relative img, img');
+    if (targetImage) {
+        event.preventDefault();
+        downloadWallpaper(targetImage);
+    }
+});
+
+// Add tactile press feedback for gallery action buttons
+['mousedown','touchstart'].forEach(evt => {
+    document.addEventListener(evt, function(e) {
+        const btn = e.target.closest('.gallery-item .p-5 .flex.space-x-2 button');
+        if (!btn) return;
+        btn.classList.add('is-tapping');
+    }, { passive: true });
+});
+
+['mouseup','mouseleave','touchend','touchcancel'].forEach(evt => {
+    document.addEventListener(evt, function(e) {
+        const btn = e.target.closest('.gallery-item .p-5 .flex.space-x-2 button');
+        if (!btn) return;
+        // small delay so the scale animation is visible
+        setTimeout(() => btn.classList.remove('is-tapping'), 120);
+    }, { passive: true });
 });
 
 // Category filter
@@ -810,6 +909,8 @@ window.addEventListener('resize', function() {
 // Lightbox functionality
 let currentImageIndex = 0;
 const images = Array.from(document.querySelectorAll('.gallery-item img'));
+let lastFocusedElement = null;
+let lastScrollY = 0;
 
 // Initialize lightbox properties
 function initializeLightbox() {
@@ -828,6 +929,10 @@ function openLightbox(imgElement) {
     const lightboxCaption = document.getElementById('lightbox-caption');
     const toolbar = document.getElementById('lightbox-toolbar');
     const lightboxMetaInfo = document.getElementById('lightbox-meta-info');
+    
+    // Preserve current focus and scroll position to avoid jump on close
+    lastFocusedElement = document.activeElement;
+    lastScrollY = window.scrollY || window.pageYOffset || 0;
     
     // Find the parent gallery item to get metadata
     const galleryItem = imgElement.closest('.gallery-item');
@@ -907,10 +1012,17 @@ function closeLightbox() {
         lightbox.style.opacity = '1';
         lightbox.classList.remove('active');
         document.body.style.overflow = 'auto';
-        // Restore focus to the previously focused element if possible
-        const activeCategory = document.querySelector('.category-btn.active');
-        if (activeCategory && typeof activeCategory.focus === 'function') {
-            setTimeout(() => activeCategory.focus(), 0);
+        // Restore focus and scroll position without jumping
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+            try {
+                lastFocusedElement.focus({ preventScroll: true });
+            } catch (_) {
+                // Older browsers: fall back to normal focus
+                lastFocusedElement.focus();
+            }
+        }
+        if (typeof window.scrollTo === 'function') {
+            window.scrollTo(0, lastScrollY);
         }
     }, 300);
 }

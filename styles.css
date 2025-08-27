@@ -924,3 +924,31 @@ body.loading {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(var(--accent-primary-rgb), 0.35);
 }
+
+/* Mobile: increase tap targets for gallery action buttons */
+@media (max-width: 640px) {
+    .gallery-item .p-5 .flex.space-x-2 {
+        gap: 0.75rem; /* larger spacing between buttons */
+    }
+    .gallery-item .p-5 .flex.space-x-2 button {
+        width: 44px;
+        height: 44px;
+        padding: 10px; /* bigger touch area */
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .gallery-item .p-5 .flex.space-x-2 i {
+        font-size: 18px; /* slightly larger icon */
+    }
+}
+
+/* Touch feedback: subtle press state */
+.gallery-item .p-5 .flex.space-x-2 button.is-tapping,
+.gallery-item .p-5 .flex.space-x-2 button:active {
+    transform: scale(0.92);
+    background-color: rgba(var(--accent-primary-rgb), 0.08);
+    box-shadow: 0 0 0 6px rgba(0,0,0,0.02) inset;
+}
