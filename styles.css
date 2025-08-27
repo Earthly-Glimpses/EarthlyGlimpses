@@ -925,6 +925,55 @@ body.loading {
     box-shadow: 0 6px 16px rgba(var(--accent-primary-rgb), 0.35);
 }
 
+/* Theme toggle buttons - make them visually distinct and larger hit areas */
+#theme-toggle,
+#mobile-theme-toggle {
+    background-color: #6366f1; /* indigo for action */
+    color: #ffffff;
+    border-radius: 9999px;
+    padding: 0.5rem 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    border: 2px solid transparent;
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    cursor: pointer;
+}
+
+#theme-toggle:hover,
+#mobile-theme-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(99, 102, 241, 0.35);
+}
+
+#theme-toggle:focus-visible,
+#mobile-theme-toggle:focus-visible {
+    outline: none;
+    border-color: #fbbf24; /* amber ring */
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.5);
+}
+
+/* When site is in dark theme, use warm light button to hint switching back */
+[data-theme="dark"] #theme-toggle,
+[data-theme="dark"] #mobile-theme-toggle {
+    background-color: #f59e0b; /* amber */
+    color: #111827;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
+}
+
+[data-theme="dark"] #theme-toggle:hover,
+[data-theme="dark"] #mobile-theme-toggle:hover {
+    box-shadow: 0 8px 18px rgba(245, 158, 11, 0.35);
+}
+
+@media (max-width: 640px) {
+    #mobile-theme-toggle {
+        padding: 0.6rem 1rem; /* bigger hit area on mobile */
+    }
+}
+
 /* Mobile: increase tap targets for gallery action buttons */
 @media (max-width: 640px) {
     .gallery-item .p-5 .flex.space-x-2 {

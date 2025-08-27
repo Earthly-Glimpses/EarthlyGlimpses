@@ -33,6 +33,11 @@ function setTheme(theme) {
             mobileThemeLabel.textContent = 'Light Mode';
             // console.log('Updated mobile theme label to: Light Mode'); // Debug log
         }
+        // Accessibility state for toggles
+        const desktopToggle = document.getElementById('theme-toggle');
+        const mobileToggle = document.getElementById('mobile-theme-toggle');
+        if (desktopToggle) desktopToggle.setAttribute('aria-pressed', 'true');
+        if (mobileToggle) mobileToggle.setAttribute('aria-pressed', 'true');
     } else {
         document.documentElement.removeAttribute('data-theme');
         document.documentElement.classList.remove('dark');
@@ -62,6 +67,11 @@ function setTheme(theme) {
             mobileThemeLabel.textContent = 'Dark Mode';
             // console.log('Updated mobile theme label to: Dark Mode'); // Debug log
         }
+        // Accessibility state for toggles
+        const desktopToggle = document.getElementById('theme-toggle');
+        const mobileToggle = document.getElementById('mobile-theme-toggle');
+        if (desktopToggle) desktopToggle.setAttribute('aria-pressed', 'false');
+        if (mobileToggle) mobileToggle.setAttribute('aria-pressed', 'false');
     }
     
     // Save theme preference to localStorage
@@ -126,19 +136,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize theme
     initializeTheme();
     
-    // Set up theme toggle buttons
+    // Set up theme toggle buttons (robust delegated + debounced handler)
+    let themeToggleLocked = false;
+    function toggleThemeDebounced() {
+        if (themeToggleLocked) return;
+        themeToggleLocked = true;
+        // Use rAF to avoid layout thrash during first load
+        requestAnimationFrame(() => {
+            toggleTheme();
+            setTimeout(() => { themeToggleLocked = false; }, 250);
+        });
+    }
+    // Direct listeners if elements exist now
     const themeToggle = document.getElementById('theme-toggle');
     const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
-    
-    if (themeToggle) {
-        // console.log('Found theme toggle button'); // Debug log
-        themeToggle.addEventListener('click', toggleTheme);
-    }
-    
-    if (mobileThemeToggle) {
-        // console.log('Found mobile theme toggle button'); // Debug log
-        mobileThemeToggle.addEventListener('click', toggleTheme);
-    }
+    themeToggle?.addEventListener('click', toggleThemeDebounced);
+    mobileThemeToggle?.addEventListener('click', toggleThemeDebounced);
+    // Delegated listener to catch clicks even if menu re-renders
+    document.addEventListener('click', function(e) {
+        const target = e.target.closest('#theme-toggle, #mobile-theme-toggle');
+        if (target) {
+            e.preventDefault();
+            toggleThemeDebounced();
+        }
+    }, { passive: true });
     
     // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
