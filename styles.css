@@ -50,6 +50,16 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+/* Prevent accidental horizontal scrolling on mobile */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Extra safety: clip any accidental overflow from main containers */
+html { overflow-x: clip; }
+nav, section, .grid, .max-w-7xl { overflow-x: clip; }
+
 /* Performance optimizations for main sections */
 section {
     will-change: auto;
@@ -629,10 +639,9 @@ body.loading {
 .lightbox {
     display: none;
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
     background-color: rgba(0, 0, 0, 0.95);
     z-index: 99999 !important;
     align-items: center;
@@ -670,6 +679,16 @@ body.loading {
     filter: contrast(1.05) brightness(1.02);
 }
 
+/* Desktop/large screens: ensure full image is visible with safe margins */
+@media (min-width: 768px) {
+    #lightbox-img {
+        width: auto;
+        height: auto;
+        max-height: calc(100vh - 160px);
+        max-width: calc(100vw - 160px);
+    }
+}
+
 .lightbox-nav {
     position: absolute;
     top: 50%;
@@ -678,6 +697,7 @@ body.loading {
     justify-content: space-between;
     padding: 0 20px;
     transform: translateY(-50%);
+    z-index: 20;
 }
 
 .lightbox-nav button {
@@ -714,7 +734,65 @@ body.loading {
     bottom: 0;
     text-align: center;
     color: white;
+    pointer-events: none; /* allow clicks to pass through to nav buttons */
+    z-index: 10;
 }
+
+/* Mobile-friendly caption sizing and clamp so it won't cover nav buttons */
+@media (max-width: 640px) {
+    #lightbox-caption {
+        padding: 12px 0;
+        font-size: 0.95rem;
+        line-height: 1.25rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-clamp: 2;
+        overflow: hidden;
+    }
+
+    /* Shrink and offset the side buttons outside the image bounds */
+    .lightbox-nav button {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+        padding: 10px;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    /* Add safe area above the image for close/meta badges only when open */
+    .lightbox.active .lightbox-content {
+        padding-top: 56px;
+    }
+}
+
+/* Bottom toolbar for compact view */
+.lightbox-toolbar {
+    display: none;
+}
+
+.lightbox-toolbar .separator { opacity: 0.7; }
+
+.lightbox-toolbar button {
+    color: #fff;
+    background: transparent;
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Auto-hide controls after inactivity */
+.lightbox-controls-hidden .lightbox-nav button,
+.lightbox-controls-hidden .lightbox-toolbar {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox-nav button,
+.lightbox-toolbar { transition: opacity 0.3s ease; }
 
 .category-btn {
     padding: 0.6rem 1.2rem;

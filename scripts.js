@@ -826,11 +826,16 @@ function openLightbox(imgElement) {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const lightboxCaption = document.getElementById('lightbox-caption');
+    const toolbar = document.getElementById('lightbox-toolbar');
     const lightboxMetaInfo = document.getElementById('lightbox-meta-info');
     
     // Find the parent gallery item to get metadata
     const galleryItem = imgElement.closest('.gallery-item');
-    currentImageIndex = images.indexOf(imgElement);
+    if (images && images.length) {
+        currentImageIndex = images.indexOf(imgElement);
+    } else {
+        currentImageIndex = 0;
+    }
     
     // Set image and caption
     lightboxImg.src = imgElement.src;
@@ -860,11 +865,30 @@ function openLightbox(imgElement) {
     lightbox.classList.add('active');
     lightbox.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+
+    // Focus management: move focus to close button when opened
+    const closeBtn = document.querySelector('#lightbox .absolute.top-4.right-4 button');
+    if (closeBtn && typeof closeBtn.focus === 'function') {
+        setTimeout(() => closeBtn.focus(), 0);
+    }
     
     // Add subtle zoom effect to the image
     setTimeout(() => {
         lightboxImg.style.transform = 'scale(1.02)';
     }, 100);
+
+    // Wire toolbar buttons and show controls initially
+    if (toolbar) {
+        const prevBtn = document.getElementById('lightbox-prev');
+        const nextBtn = document.getElementById('lightbox-next');
+        if (prevBtn) prevBtn.onclick = () => navigateLightbox(-1);
+        if (nextBtn) nextBtn.onclick = () => navigateLightbox(1);
+    }
+
+    resetLightboxControlsAutoHide();
+
+    // Initialize gesture navigation
+    initLightboxGestures();
 }
 
 function closeLightbox() {
@@ -883,10 +907,16 @@ function closeLightbox() {
         lightbox.style.opacity = '1';
         lightbox.classList.remove('active');
         document.body.style.overflow = 'auto';
+        // Restore focus to the previously focused element if possible
+        const activeCategory = document.querySelector('.category-btn.active');
+        if (activeCategory && typeof activeCategory.focus === 'function') {
+            setTimeout(() => activeCategory.focus(), 0);
+        }
     }, 300);
 }
 
 function navigateLightbox(direction) {
+    if (!images || images.length === 0) return;
     currentImageIndex += direction;
     
     if (currentImageIndex >= images.length) {
@@ -934,6 +964,11 @@ function navigateLightbox(direction) {
             lightboxImg.style.transform = 'scale(1.02)';
         }, 50);
     }, 100);
+
+    resetLightboxControlsAutoHide();
+
+    // Preload adjacent images for smoother navigation
+    preloadAdjacentImages();
 }
 
 // Close lightbox when clicking outside the image
@@ -945,18 +980,118 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeLightbox();
             }
         });
+
+        // Reveal controls on activity inside the lightbox
+        ['mousemove','mousedown','touchstart','keydown'].forEach(evt => {
+            lightbox.addEventListener(evt, () => {
+                lightbox.classList.remove('lightbox-controls-hidden');
+                resetLightboxControlsAutoHide();
+            }, { passive: true });
+        });
     }
 });
+
+// Auto-hide controls after inactivity
+let lightboxControlsTimer;
+function resetLightboxControlsAutoHide() {
+    clearTimeout(lightboxControlsTimer);
+    const lightbox = document.getElementById('lightbox');
+    if (!lightbox) return;
+    lightbox.classList.remove('lightbox-controls-hidden');
+    lightboxControlsTimer = setTimeout(() => {
+        lightbox.classList.add('lightbox-controls-hidden');
+    }, 2000);
+}
+
+// Gesture navigation (touch/mouse/trackpad)
+let startX = null;
+let isDragging = false;
+let lastX = null;
+function initLightboxGestures() {
+    const lightbox = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    if (!lightbox || !img) return;
+
+    const start = (x) => { startX = x; lastX = x; isDragging = true; img.style.transition = 'transform 0.2s ease'; };
+    const move = (x) => {
+        if (!isDragging || startX === null) return;
+        lastX = x;
+        const delta = x - startX;
+        img.style.transform = `translateX(${delta * 0.08}px) scale(1.02)`;
+    };
+    const end = () => {
+        if (!isDragging || startX === null) return;
+        const delta = lastX - startX;
+        img.style.transform = 'scale(1.02)';
+        isDragging = false; startX = null; lastX = null;
+        if (Math.abs(delta) > 40) {
+            navigateLightbox(delta < 0 ? 1 : -1);
+        }
+    };
+
+    // Touch
+    lightbox.addEventListener('touchstart', (e) => start(e.touches[0].clientX), { passive: true });
+    lightbox.addEventListener('touchmove', (e) => move(e.touches[0].clientX), { passive: true });
+    lightbox.addEventListener('touchend', end, { passive: true });
+
+    // Mouse
+    lightbox.addEventListener('mousedown', (e) => start(e.clientX));
+    lightbox.addEventListener('mousemove', (e) => move(e.clientX));
+    lightbox.addEventListener('mouseup', end);
+    lightbox.addEventListener('mouseleave', () => { if (isDragging) end(); });
+
+    // Trackpad horizontal scroll
+    lightbox.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 10) {
+            e.preventDefault();
+            navigateLightbox(e.deltaX > 0 ? 1 : -1);
+        }
+    }, { passive: false });
+}
+
+// Preload next/prev images
+function preloadAdjacentImages() {
+    if (!images || images.length === 0) return;
+    const indices = [
+        (currentImageIndex + 1) % images.length,
+        (currentImageIndex - 1 + images.length) % images.length
+    ];
+    indices.forEach(i => {
+        const src = images[i]?.src;
+        if (src) {
+            const preImg = new Image();
+            preImg.src = src;
+        }
+    });
+}
 
 // Keyboard navigation for lightbox
 document.addEventListener('keydown', function(e) {
     const lightbox = document.getElementById('lightbox');
     if (lightbox && lightbox.style.display === 'flex') {
+        // Simple focus trap: keep focus within the lightbox when open
+        const focusable = lightbox.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const firstEl = focusable[0];
+        const lastEl = focusable[focusable.length - 1];
+        if (e.key === 'Tab') {
+            if (e.shiftKey && document.activeElement === firstEl) {
+                e.preventDefault();
+                lastEl?.focus();
+                return;
+            } else if (!e.shiftKey && document.activeElement === lastEl) {
+                e.preventDefault();
+                firstEl?.focus();
+                return;
+            }
+        }
         if (e.key === 'Escape') {
+            e.preventDefault();
             closeLightbox();
         } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
             navigateLightbox(1);
         } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
             navigateLightbox(-1);
         }
     }

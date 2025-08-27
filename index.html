@@ -308,7 +308,7 @@
                         <img src="images/categories/mobile/megatronmobile4x.jpeg" 
                              alt="Megatron Mobile Wallpaper" class="w-full h-64 object-cover cursor-pointer" onclick="openLightbox(this)">
                         <!-- Category tag with blue theme for landscapes -->
-                        <div class="absolute top-3 right-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Mobile</div>
+                        <div class="absolute top-3 right-3 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">Mobile</div>
                     </div>
                     <!-- Photo details section with title, location and camera info -->
                     <div class="p-5">
@@ -1303,6 +1303,12 @@
             <div class="lightbox-nav">
                 <button onclick="navigateLightbox(-1)" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
                 <button onclick="navigateLightbox(1)" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <!-- Compact bottom toolbar for mobile/compact view -->
+            <div id="lightbox-toolbar" class="lightbox-toolbar" aria-label="Lightbox controls">
+                <button id="lightbox-prev" aria-label="Previous"><i class="fas fa-chevron-left mr-2"></i>Prev</button>
+                <div class="separator" aria-hidden="true">•</div>
+                <button id="lightbox-next" aria-label="Next">Next<i class="fas fa-chevron-right ml-2"></i></button>
             </div>
             <!-- Caption for displaying image title -->
             <div id="lightbox-caption" class="text-center text-white text-xl font-medium"></div>
