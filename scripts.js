@@ -74,14 +74,10 @@ function handleImageError(img) {
     }
 }
 
-// Enhanced category switching with animations
+// Enhanced category switching with smooth animations
 function enhancedFilterGallery(category) {
     if (categoryTransitionInProgress) return;
     categoryTransitionInProgress = true;
-    
-    // Add loading state to category buttons
-    const categoryButtons = document.querySelectorAll('.category-btn');
-    categoryButtons.forEach(btn => btn.classList.add('category-loading'));
     
     // Add transition class to gallery grid
     const galleryGrid = document.querySelector('.grid');
@@ -95,13 +91,10 @@ function enhancedFilterGallery(category) {
         categoryContainer.classList.add('filtering');
     }
     
-    // Delay the actual filtering to show transition
+    // Short delay for smooth transition
     setTimeout(() => {
         // Perform the actual filtering
         filterGallery(category);
-        
-        // Remove loading states
-        categoryButtons.forEach(btn => btn.classList.remove('category-loading'));
         
         // Remove transition classes
         if (galleryGrid) {
@@ -116,7 +109,7 @@ function enhancedFilterGallery(category) {
         setTimeout(() => {
             categoryTransitionInProgress = false;
         }, 300);
-    }, 200);
+    }, 150);
 }
 
 // Enhanced gallery item animations

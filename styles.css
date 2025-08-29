@@ -1121,30 +1121,9 @@ body.loading {
     transform: translateY(-1px) scale(1.02);
 }
 
-/* Loading indicator for category changes */
-.category-loading {
-    position: relative;
-    pointer-events: none;
-}
-
-.category-loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid transparent;
-    border-top: 2px solid var(--accent-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    z-index: 10;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+/* Smooth category transitions without loading indicators */
+.category-btn {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Restore missing animations and styles */
