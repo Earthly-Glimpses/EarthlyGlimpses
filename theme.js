@@ -154,6 +154,9 @@ document.addEventListener('DOMContentLoaded', function() {
     mobileThemeToggle?.addEventListener('click', toggleThemeDebounced);
     // Delegated listener to catch clicks even if menu re-renders
     document.addEventListener('click', function(e) {
+        // Check if e.target exists and has the closest method
+        if (!e.target || typeof e.target.closest !== 'function') return;
+        
         const target = e.target.closest('#theme-toggle, #mobile-theme-toggle');
         if (target) {
             e.preventDefault();

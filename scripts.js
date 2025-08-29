@@ -830,6 +830,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Robust handler: open lightbox when clicking any "enlarge" button
 document.addEventListener('click', function(event) {
+    // Check if event.target exists and has the closest method
+    if (!event.target || typeof event.target.closest !== 'function') return;
+    
     const clickedButton = event.target.closest('button');
     if (!clickedButton) return;
     // Detect buttons that visually show the expand icon or are meant to open the lightbox
@@ -846,6 +849,9 @@ document.addEventListener('click', function(event) {
 
 // Robust handler: download the image when clicking any "download" button
 document.addEventListener('click', function(event) {
+    // Check if event.target exists and has the closest method
+    if (!event.target || typeof event.target.closest !== 'function') return;
+    
     const clickedButton = event.target.closest('button');
     if (!clickedButton) return;
     const isDownloadButton = clickedButton.querySelector('.fa-download') || clickedButton.classList.contains('download-wallpaper');
@@ -974,6 +980,15 @@ if (isMobile) {
     });
 }
 
+// Global error handler to prevent closest() errors from breaking the page
+window.addEventListener('error', function(e) {
+    if (e.message && e.message.includes('closest is not a function')) {
+        e.preventDefault();
+        console.warn('Prevented closest() error from breaking the page');
+        return false;
+    }
+});
+
 // Lightbox functionality
 let currentImageIndex = 0;
 const images = Array.from(document.querySelectorAll('.gallery-item img'));
@@ -1003,7 +1018,7 @@ function openLightbox(imgElement) {
     lastScrollY = window.scrollY || window.pageYOffset || 0;
     
     // Find the parent gallery item to get metadata
-    const galleryItem = imgElement.closest('.gallery-item');
+    const galleryItem = imgElement && typeof imgElement.closest === 'function' ? imgElement.closest('.gallery-item') : null;
     if (images && images.length) {
         currentImageIndex = images.indexOf(imgElement);
     } else {
@@ -1119,7 +1134,7 @@ function navigateLightbox(direction) {
         lightboxCaption.textContent = currentImg.alt;
         
         // Get and set meta information if available
-        const galleryItem = currentImg.closest('.gallery-item');
+        const galleryItem = currentImg && typeof currentImg.closest === 'function' ? currentImg.closest('.gallery-item') : null;
         if (galleryItem) {
             const locationElement = galleryItem.querySelector('p.text-sm.text-gray-600, p.text-sm.text-gray-600.dark\\:text-gray-400');
             const cameraElement = galleryItem.querySelector('span.text-xs.text-gray-500, span.text-xs.text-gray-500.dark\\:text-gray-400');
