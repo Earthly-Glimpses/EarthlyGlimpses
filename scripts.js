@@ -557,21 +557,30 @@ function filterGallery(category) {
 function fixGalleryLayout() {
     // console.log('Fixing gallery layout...');
     
+    // Prevent excessive calls on mobile
+    if (isMobile && window.lastLayoutFix && (Date.now() - window.lastLayoutFix) < 1000) {
+        return; // Skip if called too frequently on mobile
+    }
+    window.lastLayoutFix = Date.now();
+    
     // Force a reflow of the gallery grid
     const galleryGrid = document.querySelector('.grid');
     if (galleryGrid) {
         // Get all gallery items
         const galleryItems = document.querySelectorAll('.gallery-item');
         
-        // Temporarily hide all items and remove fade-in class
-        galleryItems.forEach(item => {
-            item.style.opacity = '0';
-            item.style.transition = 'none';
-            item.classList.remove('fade-in');
-        });
-        
-        // Force a reflow
-        void galleryGrid.offsetWidth;
+        // On mobile, be more conservative with opacity changes
+        if (!isMobile) {
+            // Temporarily hide all items and remove fade-in class (desktop only)
+            galleryItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transition = 'none';
+                item.classList.remove('fade-in');
+            });
+            
+            // Force a reflow
+            void galleryGrid.offsetWidth;
+        }
         
         // Reinitialize the gallery while preserving expanded state
         const activeCategory = document.querySelector('.category-btn.active')?.getAttribute('data-category') || 'all';
@@ -584,7 +593,7 @@ function fixGalleryLayout() {
                     item.style.opacity = '1';
                     item.style.transition = 'opacity 0.3s ease';
                     item.classList.add('fade-in');
-                }, index * 50);
+                }, isMobile ? index * 100 : index * 50); // Slower animation on mobile
             }
         });
     }
@@ -857,6 +866,9 @@ document.addEventListener('click', function(event) {
 // Add tactile press feedback for gallery action buttons
 ['mousedown','touchstart'].forEach(evt => {
     document.addEventListener(evt, function(e) {
+        // Check if e.target exists and has the closest method
+        if (!e.target || typeof e.target.closest !== 'function') return;
+        
         const btn = e.target.closest('.gallery-item .p-5 .flex.space-x-2 button');
         if (!btn) return;
         btn.classList.add('is-tapping');
@@ -865,6 +877,9 @@ document.addEventListener('click', function(event) {
 
 ['mouseup','mouseleave','touchend','touchcancel'].forEach(evt => {
     document.addEventListener(evt, function(e) {
+        // Check if e.target exists and has the closest method
+        if (!e.target || typeof e.target.closest !== 'function') return;
+        
         const btn = e.target.closest('.gallery-item .p-5 .flex.space-x-2 button');
         if (!btn) return;
         // small delay so the scale animation is visible
@@ -946,6 +961,48 @@ window.addEventListener('resize', function() {
         fixGalleryLayout();
     }, 250); // Wait for resize to finish before recalculating
 });
+
+// Mobile-specific optimizations to prevent refresh issues
+let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+let mobileRefreshTimer;
+let mobileScrollDebounceTimer;
+
+// Prevent excessive DOM updates on mobile
+if (isMobile) {
+    // Add a more conservative approach for mobile devices
+    window.addEventListener('scroll', function() {
+        // Clear any pending refresh timer
+        clearTimeout(mobileRefreshTimer);
+        clearTimeout(mobileScrollDebounceTimer);
+        
+        // Set a timer to refresh layout only after scrolling stops
+        mobileRefreshTimer = setTimeout(function() {
+            // Only refresh if we're not in the middle of a user interaction
+            if (!document.querySelector('.gallery-item:hover')) {
+                // Add additional debounce for mobile
+                mobileScrollDebounceTimer = setTimeout(function() {
+                    fixGalleryLayout();
+                }, 200);
+            }
+        }, 800); // Even longer delay on mobile to prevent excessive updates
+    }, { passive: true });
+    
+    // Prevent touch events from triggering unnecessary updates
+    document.addEventListener('touchmove', function(e) {
+        // Only prevent default for gallery items to avoid conflicts
+        if (e.target && typeof e.target.closest === 'function' && e.target.closest('.gallery-item')) {
+            e.stopPropagation();
+        }
+    }, { passive: true });
+    
+    // Add orientation change handling for mobile
+    window.addEventListener('orientationchange', function() {
+        // Wait for orientation change to complete
+        setTimeout(function() {
+            fixGalleryLayout();
+        }, 500);
+    });
+}
 
 // Lightbox functionality
 let currentImageIndex = 0;
@@ -1273,7 +1330,7 @@ window.addEventListener('resize', function() {
                 window.expandedCategories.push(currentCategory);
             }
         }
-    }, 250);
+    }, isMobile ? 500 : 250); // Longer delay on mobile
 });
 
 // Enhanced email functionality
