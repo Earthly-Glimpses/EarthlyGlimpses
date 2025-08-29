@@ -1,4 +1,151 @@
-// Enhanced Preloader functionality
+// Enhanced image loading and category switching animations
+// Track image loading states
+let imageLoadingStates = new Map();
+let categoryTransitionInProgress = false;
+
+// Enhanced image loading functionality
+function enhanceImageLoading() {
+    const images = document.querySelectorAll('.gallery-item img');
+    
+    images.forEach((img, index) => {
+        // Add loading state
+        const galleryItem = img.closest('.gallery-item');
+        if (galleryItem) {
+            galleryItem.classList.add('loading');
+            
+            // Add skeleton loader
+            const skeleton = document.createElement('div');
+            skeleton.className = 'image-skeleton';
+            galleryItem.querySelector('.relative').appendChild(skeleton);
+        }
+        
+        // Handle image load events
+        if (img.complete) {
+            handleImageLoaded(img);
+        } else {
+            img.addEventListener('load', () => handleImageLoaded(img));
+            img.addEventListener('error', () => handleImageError(img));
+        }
+    });
+}
+
+// Handle successful image load
+function handleImageLoaded(img) {
+    const galleryItem = img.closest('.gallery-item');
+    if (galleryItem) {
+        // Remove loading state
+        galleryItem.classList.remove('loading');
+        
+        // Remove skeleton
+        const skeleton = galleryItem.querySelector('.image-skeleton');
+        if (skeleton) {
+            skeleton.remove();
+        }
+        
+        // Add loaded class to image
+        img.classList.add('loaded');
+        
+        // Mark as loaded in our tracking
+        imageLoadingStates.set(img.src, true);
+        
+        // Trigger animation
+        setTimeout(() => {
+            img.style.opacity = '1';
+            img.style.transform = 'scale(1)';
+        }, 50);
+    }
+}
+
+// Handle image load error
+function handleImageError(img) {
+    const galleryItem = img.closest('.gallery-item');
+    if (galleryItem) {
+        galleryItem.classList.remove('loading');
+        
+        // Remove skeleton
+        const skeleton = galleryItem.querySelector('.image-skeleton');
+        if (skeleton) {
+            skeleton.remove();
+        }
+        
+        // Show error state
+        img.style.opacity = '0.5';
+        img.style.filter = 'grayscale(1)';
+    }
+}
+
+// Enhanced category switching with animations
+function enhancedFilterGallery(category) {
+    if (categoryTransitionInProgress) return;
+    categoryTransitionInProgress = true;
+    
+    // Add loading state to category buttons
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    categoryButtons.forEach(btn => btn.classList.add('category-loading'));
+    
+    // Add transition class to gallery grid
+    const galleryGrid = document.querySelector('.grid');
+    if (galleryGrid) {
+        galleryGrid.classList.add('category-changing');
+    }
+    
+    // Add filtering class to category container
+    const categoryContainer = document.querySelector('.flex.flex-wrap.justify-center.gap-3.mb-12');
+    if (categoryContainer) {
+        categoryContainer.classList.add('filtering');
+    }
+    
+    // Delay the actual filtering to show transition
+    setTimeout(() => {
+        // Perform the actual filtering
+        filterGallery(category);
+        
+        // Remove loading states
+        categoryButtons.forEach(btn => btn.classList.remove('category-loading'));
+        
+        // Remove transition classes
+        if (galleryGrid) {
+            galleryGrid.classList.remove('category-changing');
+        }
+        
+        if (categoryContainer) {
+            categoryContainer.classList.remove('filtering');
+        }
+        
+        // Reset transition flag
+        setTimeout(() => {
+            categoryTransitionInProgress = false;
+        }, 300);
+    }, 200);
+}
+
+// Enhanced gallery item animations
+function enhanceGalleryItemAnimations() {
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    galleryItems.forEach((item, index) => {
+        // Add intersection observer for scroll-based animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !item.classList.contains('animated')) {
+                    // Add staggered delay based on position
+                    setTimeout(() => {
+                        item.classList.add('fade-in', 'animated');
+                    }, index * 100);
+                    
+                    observer.unobserve(item);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '50px'
+        });
+        
+        observer.observe(item);
+    });
+}
+
+// Enhanced preloader functionality
 // Initialize preloader state tracking
 let preloaderRemoved = false;
 let assetsLoaded = false;
@@ -37,54 +184,78 @@ function downloadWallpaper(imgElement) {
         return;
     }
     
-    // Create a temporary link element
-    const link = document.createElement('a');
-    link.href = imgElement.src;
-    
-    // Extract filename from URL or use default
-    const urlParts = imgElement.src.split('/');
-    const filename = urlParts[urlParts.length - 1] || 'wallpaper.jpg';
-    
-    link.download = filename;
-    link.target = '_blank';
-    
-    // Append to body, click, and remove
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // Show success message
-    showNotification('Wallpaper download started!', 'success');
+    try {
+        // Create a temporary link element
+        const link = document.createElement('a');
+        link.href = imgElement.src;
+        
+        // Extract filename from URL or use default
+        const urlParts = imgElement.src.split('/');
+        const filename = urlParts[urlParts.length - 1] || 'wallpaper.jpg';
+        
+        link.download = filename;
+        link.target = '_blank';
+        
+        // Append to body, click, and remove
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Show success message
+        showNotification('Wallpaper download started!', 'success');
+    } catch (error) {
+        console.error('Error downloading wallpaper:', error);
+        showNotification('Download failed. Please try again.', 'error');
+    }
 }
 
 // Function to show notifications
 function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
-        type === 'success' ? 'bg-green-500 text-white' : 
-        type === 'error' ? 'bg-red-500 text-white' : 
-        'bg-blue-500 text-white'
-    }`;
-    notification.textContent = message;
-    
-    // Add to page
-    document.body.appendChild(notification);
-    
-    // Animate in
-    setTimeout(() => {
-        notification.classList.remove('translate-x-full');
-    }, 100);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-        notification.classList.add('translate-x-full');
+    try {
+        // Validate inputs
+        if (!message || typeof message !== 'string') {
+            console.warn('Invalid message provided to showNotification');
+            return;
+        }
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
+            type === 'success' ? 'bg-green-500 text-white' : 
+            type === 'error' ? 'bg-red-500 text-white' : 
+            'bg-blue-500 text-white'
+        }`;
+        notification.textContent = message;
+        
+        // Add to page
+        if (document.body) {
+            document.body.appendChild(notification);
+        } else {
+            console.warn('Document body not available for notification');
+            return;
+        }
+        
+        // Animate in
         setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
+            if (notification && notification.classList) {
+                notification.classList.remove('translate-x-full');
             }
-        }, 300);
-    }, 3000);
+        }, 100);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            if (notification && notification.classList) {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (notification && notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }
+        }, 3000);
+    } catch (error) {
+        console.error('Error showing notification:', error);
+    }
 }
 
 // Function to hide preloader with animation - moved to global scope
@@ -113,7 +284,7 @@ function hidePreloader() {
         el.style.zIndex = '1';
     });
     
-    // Fix layout immediately
+    // Fix layout immediately (desktop only)
     if (!window.layoutFixed) {
         fixGalleryLayout();
         window.layoutFixed = true;
@@ -241,7 +412,9 @@ window.addEventListener('DOMContentLoaded', function() {
                 hsl(${240 + hue}, 70%, 60%), 
                 hsl(${280 + hue}, 70%, 60%))`;
             
-            preloader.appendChild(particle);
+            if (preloader && preloader.parentNode) {
+                preloader.appendChild(particle);
+            }
         }
     }
     
@@ -320,40 +493,37 @@ window.addEventListener('DOMContentLoaded', function() {
             // Hide preloader with a small delay if not already hidden
             if (!preloaderRemoved) {
                 // Ensure we're not removing the preloader too early
-                setTimeout(() => {
-                    // Double-check that we're ready to remove the preloader
-                    const allImagesComplete = Array.from(document.querySelectorAll('img')).every(img => {
-                        // Check if image is complete and has dimensions
-                        const isComplete = img.complete;
-                        const hasDimensions = img.naturalWidth > 0;
-                        
-                        // Log problematic images for debugging
-                        if (!isComplete || !hasDimensions) {
-                            console.warn('Problematic image:', img.src, 'Complete:', isComplete, 'Has dimensions:', hasDimensions);
-                        }
-                        
-                        return isComplete && hasDimensions;
-                    });
+                const allImagesComplete = Array.from(document.querySelectorAll('img')).every(img => {
+                    // Check if image is complete and has dimensions
+                    const isComplete = img.complete;
+                    const hasDimensions = img.naturalWidth > 0;
                     
-                    if (allImagesComplete && !preloaderRemoved) {
-                        // console.log('Verified all images are complete, removing preloader');
-                        hidePreloader();
-                        
-                        // Fix layout after all images are loaded
-                        if (!window.layoutFixed) {
-                            fixGalleryLayout();
-                            window.layoutFixed = true;
-                        }
-                    } else if (!preloaderRemoved) {
-                        // console.log('Some images still loading despite counter completion, forcing preloader removal');
-                        // Force remove preloader after a short delay
-                        setTimeout(() => {
-                            if (!preloaderRemoved) {
-                                hidePreloader();
-                            }
-                        }, 500);
+                    // Log problematic images for debugging
+                    if (!isComplete || !hasDimensions) {
+                        console.warn('Problematic image:', img.src, 'Complete:', isComplete, 'Has dimensions:', hasDimensions);
                     }
-                }, 800);
+                    
+                    return isComplete && hasDimensions;
+                });
+                
+                if (allImagesComplete && !preloaderRemoved) {
+                    // console.log('Verified all images are complete, removing preloader');
+                    hidePreloader();
+                    
+                    // Fix layout after all images are loaded
+                    if (!window.layoutFixed) {
+                        fixGalleryLayout();
+                        window.layoutFixed = true;
+                    }
+                } else if (!preloaderRemoved) {
+                    // console.log('Some images still loading despite counter completion, forcing preloader removal');
+                    // Force remove preloader after a short delay
+                    setTimeout(() => {
+                        if (!preloaderRemoved) {
+                            hidePreloader();
+                        }
+                    }, 500);
+                }
             }
         }
     }
@@ -435,7 +605,9 @@ function filterGallery(category) {
     const galleryItems = document.querySelectorAll('.gallery-item');
     galleryItems.forEach(item => {
         item.style.display = 'none';
-        item.classList.remove('fade-in');
+        item.classList.remove('fade-in', 'animated');
+        // Temporarily remove loaded class to allow new animations
+        item.classList.remove('loaded');
     });
     
     // Reset expanded state when switching categories (unless it's the same category)
@@ -527,12 +699,18 @@ function filterGallery(category) {
                 item.style.display = 'block';
                 item.classList.remove('hidden-photo');
                 
-                // Apply staggered animation with delay based on position
+                // Apply enhanced staggered animation with delay based on position
                 setTimeout(() => {
-                    item.classList.add('fade-in');
+                    item.classList.add('fade-in', 'animated');
                     // Mark item as loaded to prevent future interference
                     item.classList.add('loaded');
-                }, index * 80); // 80ms delay between each item
+                    
+                    // Re-initialize image loading for new items
+                    const img = item.querySelector('img');
+                    if (img && !imageLoadingStates.get(img.src)) {
+                        enhanceImageLoading();
+                    }
+                }, index * 100); // Increased delay for smoother animation
             } else {
                 item.style.display = 'none';
                 item.classList.add('hidden-photo');
@@ -559,17 +737,29 @@ function filterGallery(category) {
 function fixGalleryLayout() {
     // console.log('Fixing gallery layout...');
     
-    // On mobile, skip this function entirely to prevent refresh issues
-    if (isMobile) {
-        return;
-    }
-    
     // Force a reflow of the gallery grid
     const galleryGrid = document.querySelector('.grid');
     if (galleryGrid) {
         // Get all gallery items
         const galleryItems = document.querySelectorAll('.gallery-item');
         
+        // On mobile, only run initial animations, skip refresh logic
+        if (isMobile) {
+            // Just ensure items have proper fade-in animations on first load
+            galleryItems.forEach((item, index) => {
+                if (item.style.display !== 'none' && !item.classList.contains('fade-in')) {
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transition = 'opacity 0.3s ease';
+                        item.classList.add('fade-in');
+                        item.classList.add('loaded');
+                    }, index * 50);
+                }
+            });
+            return; // Skip the rest of the function on mobile
+        }
+        
+        // Desktop: Full layout fix with refresh logic
         // Temporarily hide all items and remove fade-in class
         galleryItems.forEach(item => {
             item.style.opacity = '0';
@@ -677,6 +867,11 @@ function initializeGallery() {
                 if (isCategoryExpanded || index < rowsToShowInitially * itemsPerRow) {
                     item.style.display = 'block';
                     item.classList.remove('hidden-photo');
+                    // Add enhanced staggered animation for initial items
+                    setTimeout(() => {
+                        item.classList.add('fade-in', 'animated');
+                        item.classList.add('loaded');
+                    }, index * 100);
                 } else {
                     item.style.display = 'none';
                     item.classList.add('hidden-photo');
@@ -684,9 +879,14 @@ function initializeGallery() {
             });
         } else {
             // Show all items if there are fewer than the initial count
-            categoryItems.forEach(item => {
+            categoryItems.forEach((item, index) => {
                 item.style.display = 'block';
                 item.classList.remove('hidden-photo');
+                // Add enhanced staggered animation for all items
+                setTimeout(() => {
+                    item.classList.add('fade-in', 'animated');
+                    item.classList.add('loaded');
+                }, index * 100);
             });
         }
     });
@@ -707,6 +907,11 @@ function initializeGallery() {
                 if (isAllExpanded || index < rowsToShowInitially * itemsPerRow) {
                     item.style.display = 'block';
                     item.classList.remove('hidden-photo');
+                    // Add enhanced staggered animation for initial items
+                    setTimeout(() => {
+                        item.classList.add('fade-in', 'animated');
+                        item.classList.add('loaded');
+                    }, index * 100);
                 } else {
                     item.style.display = 'none';
                     item.classList.add('hidden-photo');
@@ -724,9 +929,14 @@ function initializeGallery() {
             }
         } else {
             // Show all items if there are fewer than the initial count
-            allItems.forEach(item => {
+            allItems.forEach((item, index) => {
                 item.style.display = 'block';
                 item.classList.remove('hidden-photo');
+                // Add enhanced staggered animation for all items
+                setTimeout(() => {
+                    item.classList.add('fade-in', 'animated');
+                    item.classList.add('loaded');
+                }, index * 100);
             });
             
             // Hide the load more button
@@ -741,6 +951,10 @@ function initializeGallery() {
 // Call the function when the page loads
 document.addEventListener('DOMContentLoaded', function() {
     initializeGallery();
+    
+    // Initialize enhanced animations
+    enhanceImageLoading();
+    enhanceGalleryItemAnimations();
     
     // Initialize expanded categories tracking
     window.expandedCategories = window.expandedCategories || [];
@@ -759,15 +973,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     : `.gallery-item[data-category="${activeCategory}"].hidden-photo`
             );
             
-            // Show all remaining photos with staggered animation
+            // Show all remaining photos with enhanced staggered animation
             hiddenPhotos.forEach((photo, index) => {
                 photo.style.display = 'block';
                 photo.classList.remove('hidden-photo');
                 
-                // Apply staggered animation with delay based on position
+                // Apply enhanced staggered animation with delay based on position
                 setTimeout(() => {
-                    photo.classList.add('fade-in');
-                }, index * 80); // 80ms delay between each item
+                    photo.classList.add('fade-in', 'animated');
+                    
+                    // Re-initialize image loading for new items
+                    const img = photo.querySelector('img');
+                    if (img && !imageLoadingStates.get(img.src)) {
+                        enhanceImageLoading();
+                    }
+                }, index * 100); // Increased delay for smoother animation
             });
             
             // Mark this category as expanded so it stays expanded on scroll/resize
@@ -837,9 +1057,15 @@ document.addEventListener('click', function(event) {
     
     const clickedButton = event.target.closest('button');
     if (!clickedButton) return;
-    // Detect buttons that visually show the expand icon or are meant to open the lightbox
-    const isExpandButton = clickedButton.querySelector('.fa-expand-alt') || clickedButton.classList.contains('open-lightbox');
+    
+    // Check for data-action attribute first, then fallback to icon detection
+    const isExpandButton = clickedButton.getAttribute('data-action') === 'open-lightbox' || 
+                          clickedButton.classList.contains('open-lightbox-btn') ||
+                          clickedButton.querySelector('.fa-expand-alt') || 
+                          clickedButton.classList.contains('open-lightbox');
+    
     if (!isExpandButton) return;
+    
     const galleryItem = clickedButton.closest('.gallery-item');
     if (!galleryItem) return;
     const targetImage = galleryItem.querySelector('div.relative img, img');
@@ -856,8 +1082,15 @@ document.addEventListener('click', function(event) {
     
     const clickedButton = event.target.closest('button');
     if (!clickedButton) return;
-    const isDownloadButton = clickedButton.querySelector('.fa-download') || clickedButton.classList.contains('download-wallpaper');
+    
+    // Check for data-action attribute first, then fallback to icon detection
+    const isDownloadButton = clickedButton.getAttribute('data-action') === 'download-wallpaper' || 
+                            clickedButton.classList.contains('download-wallpaper-btn') ||
+                            clickedButton.querySelector('.fa-download') || 
+                            clickedButton.classList.contains('download-wallpaper');
+    
     if (!isDownloadButton) return;
+    
     const galleryItem = clickedButton.closest('.gallery-item');
     if (!galleryItem) return;
     const targetImage = galleryItem.querySelector('div.relative img, img');
@@ -945,8 +1178,8 @@ categoryButtons.forEach(button => {
         const category = this.getAttribute('data-category');
         // console.log(`Category button clicked: ${category}`);
         
-        // Use the filterGallery function to handle the filtering
-        filterGallery(category);
+        // Use the enhanced filterGallery function to handle the filtering with animations
+        enhancedFilterGallery(category);
     });
 });
 
@@ -1006,19 +1239,33 @@ let lastScrollY = 0;
 function initializeLightbox() {
     const lightbox = document.getElementById('lightbox');
     
-    // Set initial properties
-    lightbox.style.display = 'none';
+    // Set initial properties if lightbox exists
+    if (lightbox) {
+        lightbox.style.display = 'none';
+    }
 }
 
 // Call initialization on page load
 document.addEventListener('DOMContentLoaded', initializeLightbox);
 
 function openLightbox(imgElement) {
+    // Check if required elements exist
+    if (!imgElement || !imgElement.src) {
+        console.warn('Invalid image element provided to openLightbox');
+        return;
+    }
+    
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const lightboxCaption = document.getElementById('lightbox-caption');
     const toolbar = document.getElementById('lightbox-toolbar');
     const lightboxMetaInfo = document.getElementById('lightbox-meta-info');
+    
+    // Check if all required lightbox elements exist
+    if (!lightbox || !lightboxImg || !lightboxCaption) {
+        console.warn('Lightbox elements not found');
+        return;
+    }
     
     // Preserve current focus and scroll position to avoid jump on close
     lastFocusedElement = document.activeElement;
@@ -1034,7 +1281,7 @@ function openLightbox(imgElement) {
     
     // Set image and caption
     lightboxImg.src = imgElement.src;
-    lightboxCaption.textContent = imgElement.alt;
+    lightboxCaption.textContent = imgElement.alt || '';
     
     // Get and set meta information if available
     if (galleryItem) {
