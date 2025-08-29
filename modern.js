@@ -4,6 +4,8 @@ let lenis;
 // Track if animations have been initialized
 let animationsInitialized = false;
 
+// Use the isMobile variable from scripts.js instead of declaring it here
+
 // Wait for all dependencies to be loaded
 function waitForDependencies() {
     return new Promise((resolve) => {
@@ -41,19 +43,38 @@ function initAnimations() {
         delay: 0.2 // Small delay after preloader disappears
     });
     
-    // Gallery items stagger animation - simplified for better performance
-    gsap.from('.gallery-item', {
-        scrollTrigger: {
-            trigger: '#gallery',
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-        },
-        opacity: 0.7,
-        y: 15,
-        stagger: 0.1, // Increased from 0.05 for better performance
-        duration: 0.4, // Reduced from 0.5
-        ease: 'power1.out'
-    });
+    // Gallery items stagger animation - only trigger once to prevent refresh issues
+    const gallerySection = document.getElementById('gallery');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    if (gallerySection && galleryItems.length > 0) {
+        try {
+            gsap.from('.gallery-item', {
+                scrollTrigger: {
+                    trigger: '#gallery',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse', // Changed to prevent re-triggering
+                    once: true // Ensure it only triggers once
+                },
+                opacity: 0.7,
+                y: 15,
+                stagger: 0.1, // Increased from 0.05 for better performance
+                duration: 0.4, // Reduced from 0.5
+                ease: 'power1.out',
+                onComplete: function() {
+                    // Mark items as animated to prevent re-animation
+                    galleryItems.forEach(item => {
+                        item.classList.add('gsap-animated');
+                    });
+                }
+            });
+        } catch (error) {
+            console.warn('GSAP gallery animation failed:', error);
+            // Fallback: manually add gsap-animated class to prevent future issues
+            galleryItems.forEach(item => {
+                item.classList.add('gsap-animated');
+            });
+        }
+    }
     
     // Equipment section animation - simplified
     gsap.from('#equipment .bg-white', {
@@ -104,8 +125,13 @@ function initSmoothScrolling() {
         infinite: false,
     });
     
-    // Integrate Lenis with GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update);
+    // Integrate Lenis with GSAP ScrollTrigger - optimized for mobile
+    lenis.on('scroll', (e) => {
+        // Only update ScrollTrigger on desktop or when necessary
+        if (!isMobile || e.delta > 10) { // Only update on significant scroll on mobile
+            ScrollTrigger.update();
+        }
+    });
     
     // Add Lenis's requestAnimationFrame (raf) method to GSAP's ticker
     gsap.ticker.add((time) => {

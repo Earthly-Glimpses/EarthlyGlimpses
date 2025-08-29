@@ -520,22 +520,24 @@ function filterGallery(category) {
     // Check if this category has been expanded (load more clicked)
     const isCategoryExpanded = window.expandedCategories && window.expandedCategories.includes(category);
     
-    // Apply staggered animation to visible items
-    selectedItems.forEach((item, index) => {
-        // If category is expanded, show all items. Otherwise, show only initial items
-        if (isCategoryExpanded || index < rowsToShowInitially * itemsPerRow) {
-            item.style.display = 'block';
-            item.classList.remove('hidden-photo');
-            
-            // Apply staggered animation with delay based on position
-            setTimeout(() => {
-                item.classList.add('fade-in');
-            }, index * 80); // 80ms delay between each item
-        } else {
-            item.style.display = 'none';
-            item.classList.add('hidden-photo');
-        }
-    });
+            // Apply staggered animation to visible items
+        selectedItems.forEach((item, index) => {
+            // If category is expanded, show all items. Otherwise, show only initial items
+            if (isCategoryExpanded || index < rowsToShowInitially * itemsPerRow) {
+                item.style.display = 'block';
+                item.classList.remove('hidden-photo');
+                
+                // Apply staggered animation with delay based on position
+                setTimeout(() => {
+                    item.classList.add('fade-in');
+                    // Mark item as loaded to prevent future interference
+                    item.classList.add('loaded');
+                }, index * 80); // 80ms delay between each item
+            } else {
+                item.style.display = 'none';
+                item.classList.add('hidden-photo');
+            }
+        });
     
     // Show or hide the load more button based on whether there are more items and if category is expanded
     const loadMoreButton = document.querySelector('.text-center.mt-12 button');
@@ -959,13 +961,18 @@ window.addEventListener('resize', function() {
     
     // Set a new timer to avoid excessive recalculations during resize
     resizeTimer = setTimeout(function() {
-        // Fix layout after resize completes
+        // On mobile, skip this to prevent refresh issues
+        if (isMobile) {
+            return;
+        }
+        // Fix layout after resize completes (desktop only)
         fixGalleryLayout();
     }, 250); // Wait for resize to finish before recalculating
 });
 
 // Mobile-specific optimizations to prevent refresh issues
-let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+window.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const isMobile = window.isMobile;
 
 // Prevent excessive DOM updates on mobile
 if (isMobile) {
