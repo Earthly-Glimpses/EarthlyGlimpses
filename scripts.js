@@ -557,11 +557,10 @@ function filterGallery(category) {
 function fixGalleryLayout() {
     // console.log('Fixing gallery layout...');
     
-    // Prevent excessive calls on mobile
-    if (isMobile && window.lastLayoutFix && (Date.now() - window.lastLayoutFix) < 1000) {
-        return; // Skip if called too frequently on mobile
+    // On mobile, skip this function entirely to prevent refresh issues
+    if (isMobile) {
+        return;
     }
-    window.lastLayoutFix = Date.now();
     
     // Force a reflow of the gallery grid
     const galleryGrid = document.querySelector('.grid');
@@ -569,18 +568,15 @@ function fixGalleryLayout() {
         // Get all gallery items
         const galleryItems = document.querySelectorAll('.gallery-item');
         
-        // On mobile, be more conservative with opacity changes
-        if (!isMobile) {
-            // Temporarily hide all items and remove fade-in class (desktop only)
-            galleryItems.forEach(item => {
-                item.style.opacity = '0';
-                item.style.transition = 'none';
-                item.classList.remove('fade-in');
-            });
-            
-            // Force a reflow
-            void galleryGrid.offsetWidth;
-        }
+        // Temporarily hide all items and remove fade-in class
+        galleryItems.forEach(item => {
+            item.style.opacity = '0';
+            item.style.transition = 'none';
+            item.classList.remove('fade-in');
+        });
+        
+        // Force a reflow
+        void galleryGrid.offsetWidth;
         
         // Reinitialize the gallery while preserving expanded state
         const activeCategory = document.querySelector('.category-btn.active')?.getAttribute('data-category') || 'all';
@@ -593,7 +589,7 @@ function fixGalleryLayout() {
                     item.style.opacity = '1';
                     item.style.transition = 'opacity 0.3s ease';
                     item.classList.add('fade-in');
-                }, isMobile ? index * 100 : index * 50); // Slower animation on mobile
+                }, index * 50);
             }
         });
     }
@@ -964,42 +960,16 @@ window.addEventListener('resize', function() {
 
 // Mobile-specific optimizations to prevent refresh issues
 let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-let mobileRefreshTimer;
-let mobileScrollDebounceTimer;
 
 // Prevent excessive DOM updates on mobile
 if (isMobile) {
-    // Add a more conservative approach for mobile devices
-    window.addEventListener('scroll', function() {
-        // Clear any pending refresh timer
-        clearTimeout(mobileRefreshTimer);
-        clearTimeout(mobileScrollDebounceTimer);
-        
-        // Set a timer to refresh layout only after scrolling stops
-        mobileRefreshTimer = setTimeout(function() {
-            // Only refresh if we're not in the middle of a user interaction
-            if (!document.querySelector('.gallery-item:hover')) {
-                // Add additional debounce for mobile
-                mobileScrollDebounceTimer = setTimeout(function() {
-                    fixGalleryLayout();
-                }, 200);
-            }
-        }, 800); // Even longer delay on mobile to prevent excessive updates
-    }, { passive: true });
-    
-    // Prevent touch events from triggering unnecessary updates
-    document.addEventListener('touchmove', function(e) {
-        // Only prevent default for gallery items to avoid conflicts
-        if (e.target && typeof e.target.closest === 'function' && e.target.closest('.gallery-item')) {
-            e.stopPropagation();
-        }
-    }, { passive: true });
-    
-    // Add orientation change handling for mobile
+    // Only handle orientation changes - no automatic refresh on scroll/touch
     window.addEventListener('orientationchange', function() {
         // Wait for orientation change to complete
         setTimeout(function() {
-            fixGalleryLayout();
+            // Only refresh if absolutely necessary (orientation change)
+            const activeCategory = document.querySelector('.category-btn.active')?.getAttribute('data-category') || 'all';
+            filterGallery(activeCategory);
         }, 500);
     });
 }
@@ -1312,22 +1282,29 @@ window.addEventListener('resize', function() {
     // Debounce the resize event to avoid excessive calculations
     clearTimeout(window.resizeTimer);
     window.resizeTimer = setTimeout(function() {
-        // Recalculate the layout from scratch
-        initializeGallery();
-        
-        // Re-trigger the active category filter to refresh the layout while preserving expanded state
-        const activeButton = document.querySelector('.category-btn.active');
-        if (activeButton) {
-            // Store current expanded state
-            const currentCategory = activeButton.getAttribute('data-category');
-            const wasExpanded = window.expandedCategories && window.expandedCategories.includes(currentCategory);
+        // On mobile, only do minimal updates to prevent refresh issues
+        if (isMobile) {
+            // Just recalculate items per row without full refresh
+            const activeCategory = document.querySelector('.category-btn.active')?.getAttribute('data-category') || 'all';
+            filterGallery(activeCategory);
+        } else {
+            // Full refresh on desktop
+            initializeGallery();
             
-            // Trigger filter
-            activeButton.click();
-            
-            // If category was expanded, ensure it stays expanded
-            if (wasExpanded && window.expandedCategories && !window.expandedCategories.includes(currentCategory)) {
-                window.expandedCategories.push(currentCategory);
+            // Re-trigger the active category filter to refresh the layout while preserving expanded state
+            const activeButton = document.querySelector('.category-btn.active');
+            if (activeButton) {
+                // Store current expanded state
+                const currentCategory = activeButton.getAttribute('data-category');
+                const wasExpanded = window.expandedCategories && window.expandedCategories.includes(currentCategory);
+                
+                // Trigger filter
+                activeButton.click();
+                
+                // If category was expanded, ensure it stays expanded
+                if (wasExpanded && window.expandedCategories && !window.expandedCategories.includes(currentCategory)) {
+                    window.expandedCategories.push(currentCategory);
+                }
             }
         }
     }, isMobile ? 500 : 250); // Longer delay on mobile
