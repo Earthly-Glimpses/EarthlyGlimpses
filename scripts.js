@@ -438,6 +438,17 @@ function filterGallery(category) {
         item.classList.remove('fade-in');
     });
     
+    // Reset expanded state when switching categories (unless it's the same category)
+    if (window.currentActiveCategory && window.currentActiveCategory !== category) {
+        // Remove the previous category from expanded list
+        if (window.expandedCategories && window.expandedCategories.includes(window.currentActiveCategory)) {
+            window.expandedCategories = window.expandedCategories.filter(cat => cat !== window.currentActiveCategory);
+        }
+    }
+    
+    // Update current active category
+    window.currentActiveCategory = category;
+    
     // Show only the initial items for the selected category
     const selectedItems = document.querySelectorAll(
         category === 'all' 
@@ -506,9 +517,13 @@ function filterGallery(category) {
     const rowsToShowInitially = 2;
     const itemsPerRow = calculateItemsPerRow();
     
+    // Check if this category has been expanded (load more clicked)
+    const isCategoryExpanded = window.expandedCategories && window.expandedCategories.includes(category);
+    
     // Apply staggered animation to visible items
     selectedItems.forEach((item, index) => {
-        if (index < rowsToShowInitially * itemsPerRow) {
+        // If category is expanded, show all items. Otherwise, show only initial items
+        if (isCategoryExpanded || index < rowsToShowInitially * itemsPerRow) {
             item.style.display = 'block';
             item.classList.remove('hidden-photo');
             
@@ -522,12 +537,17 @@ function filterGallery(category) {
         }
     });
     
-    // Show or hide the load more button based on whether there are more items
+    // Show or hide the load more button based on whether there are more items and if category is expanded
     const loadMoreButton = document.querySelector('.text-center.mt-12 button');
     if (loadMoreButton) {
-        if (selectedItems.length > rowsToShowInitially * itemsPerRow) {
+        if (isCategoryExpanded) {
+            // If category is expanded, hide the load more button
+            loadMoreButton.style.display = 'none';
+        } else if (selectedItems.length > rowsToShowInitially * itemsPerRow) {
+            // If category is not expanded and there are more items, show the load more button
             loadMoreButton.style.display = 'inline-flex';
         } else {
+            // Hide the load more button if no more items
             loadMoreButton.style.display = 'none';
         }
     }
@@ -553,9 +573,9 @@ function fixGalleryLayout() {
         // Force a reflow
         void galleryGrid.offsetWidth;
         
-        // Reinitialize the gallery
+        // Reinitialize the gallery while preserving expanded state
         const activeCategory = document.querySelector('.category-btn.active')?.getAttribute('data-category') || 'all';
-        filterGallery(activeCategory); // filterGallery will handle the staggered animation
+        filterGallery(activeCategory); // filterGallery will handle the staggered animation and expanded state
         
         // Show items with a staggered fade-in for any that weren't handled by filterGallery
         galleryItems.forEach((item, index) => {
@@ -590,6 +610,9 @@ function initializeGallery() {
     
     // Flag to track if layout has been fixed after initial load
     window.layoutFixed = false;
+    
+    // Initialize expanded categories tracking if not already done
+    window.expandedCategories = window.expandedCategories || [];
     
     // Calculate items per row based on actual layout
     function calculateItemsPerRow() {
@@ -637,11 +660,14 @@ function initializeGallery() {
     categories.forEach(category => {
         const categoryItems = document.querySelectorAll(`.gallery-item[data-category="${category}"]`);
         
+        // Check if this category has been expanded
+        const isCategoryExpanded = window.expandedCategories.includes(category);
+        
         // If this category has more than the initial number to show
         if (categoryItems.length > rowsToShowInitially * itemsPerRow) {
-            // Show initial items and hide the rest
+            // Show initial items and hide the rest, unless category is expanded
             categoryItems.forEach((item, index) => {
-                if (index < rowsToShowInitially * itemsPerRow) {
+                if (isCategoryExpanded || index < rowsToShowInitially * itemsPerRow) {
                     item.style.display = 'block';
                     item.classList.remove('hidden-photo');
                 } else {
@@ -664,11 +690,14 @@ function initializeGallery() {
     
     // Only process 'all' category if it's currently active
     if (activeCategory === 'all') {
+        // Check if 'all' category has been expanded
+        const isAllExpanded = window.expandedCategories.includes('all');
+        
         // If there are more items than should be shown initially
         if (allItems.length > rowsToShowInitially * itemsPerRow) {
-            // Show initial items and hide the rest
+            // Show initial items and hide the rest, unless 'all' is expanded
             allItems.forEach((item, index) => {
-                if (index < rowsToShowInitially * itemsPerRow) {
+                if (isAllExpanded || index < rowsToShowInitially * itemsPerRow) {
                     item.style.display = 'block';
                     item.classList.remove('hidden-photo');
                 } else {
@@ -677,10 +706,14 @@ function initializeGallery() {
                 }
             });
             
-            // Show the load more button
+            // Show or hide the load more button based on expanded state
             const loadMoreButton = document.querySelector('.text-center.mt-12 button');
             if (loadMoreButton) {
-                loadMoreButton.style.display = 'inline-flex';
+                if (isAllExpanded) {
+                    loadMoreButton.style.display = 'none';
+                } else {
+                    loadMoreButton.style.display = 'inline-flex';
+                }
             }
         } else {
             // Show all items if there are fewer than the initial count
@@ -701,6 +734,9 @@ function initializeGallery() {
 // Call the function when the page loads
 document.addEventListener('DOMContentLoaded', function() {
     initializeGallery();
+    
+    // Initialize expanded categories tracking
+    window.expandedCategories = window.expandedCategories || [];
     
     // Load More Photos button functionality
     const loadMoreButton = document.querySelector('.text-center.mt-12 button');
@@ -727,7 +763,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, index * 80); // 80ms delay between each item
             });
             
-            // Always hide the load more button after clicking
+            // Mark this category as expanded so it stays expanded on scroll/resize
+            if (!window.expandedCategories.includes(activeCategory)) {
+                window.expandedCategories.push(activeCategory);
+            }
+            
+            // Hide the load more button after clicking
             this.style.display = 'none';
         });
     }
@@ -1217,10 +1258,20 @@ window.addEventListener('resize', function() {
         // Recalculate the layout from scratch
         initializeGallery();
         
-        // Re-trigger the active category filter to refresh the layout
+        // Re-trigger the active category filter to refresh the layout while preserving expanded state
         const activeButton = document.querySelector('.category-btn.active');
         if (activeButton) {
+            // Store current expanded state
+            const currentCategory = activeButton.getAttribute('data-category');
+            const wasExpanded = window.expandedCategories && window.expandedCategories.includes(currentCategory);
+            
+            // Trigger filter
             activeButton.click();
+            
+            // If category was expanded, ensure it stays expanded
+            if (wasExpanded && window.expandedCategories && !window.expandedCategories.includes(currentCategory)) {
+                window.expandedCategories.push(currentCategory);
+            }
         }
     }, 250);
 });
